@@ -2,6 +2,7 @@
 	import SeoHead from '$lib/components/SeoHead.svelte';
 	import { BUSINESS_NAME } from '$lib/config';
 	import { waLink } from '$lib/whatsapp';
+	import { reveal } from '$lib/actions/reveal';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -95,15 +96,21 @@
 	path="/availability"
 />
 
-<section class="container-fb py-16">
-	<h1 class="font-heading text-3xl">Scooter availability</h1>
-	<div class="divider ml-0"></div>
-	<p class="mt-4 text-(--color-dark)/70">
-		Green = free, red = already booked. Showing the next {DAYS_AHEAD} days for our scooters in Tamraght
-		&amp; Taghazout.
-	</p>
+<section class="page-header-fb">
+	<div class="container-fb">
+		<h1 class="text-3xl">Scooter availability</h1>
+		<p>
+			Green = free, red = already booked. Showing the next {DAYS_AHEAD} days for our scooters in
+			Tamraght &amp; Taghazout.
+		</p>
+	</div>
+</section>
 
-	<div class="mt-8 overflow-x-auto rounded-[var(--radius-fb-lg)] bg-white p-2 shadow-[var(--shadow-fb-sm)]">
+<section class="section-fb container-fb">
+	<div
+		class="overflow-x-auto rounded-[var(--radius-fb-lg)] bg-white p-2 shadow-[var(--shadow-fb-sm)]"
+		use:reveal
+	>
 		<table class="w-full border-collapse text-sm">
 			<thead>
 				<tr>
@@ -140,7 +147,10 @@
 		</table>
 	</div>
 
-	<div class="mx-auto mt-12 max-w-lg rounded-[var(--radius-fb-lg)] bg-white p-8 shadow-[var(--shadow-fb-sm)]">
+	<div
+		class="mx-auto mt-12 max-w-lg rounded-[var(--radius-fb-lg)] bg-white p-8 shadow-[var(--shadow-fb-sm)]"
+		use:reveal
+	>
 		<h2 class="font-heading text-xl">Book on WhatsApp</h2>
 		<p class="mt-2 text-sm text-(--color-dark)/70">
 			Pick a scooter and your dates &mdash; we'll open WhatsApp with your request pre-filled.

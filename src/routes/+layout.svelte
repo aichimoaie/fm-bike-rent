@@ -35,22 +35,22 @@
 
 <div class="flex min-h-screen flex-col">
 	<header
-		class="fixed top-0 right-0 left-0 z-50 h-20 border-b border-black/5 shadow-sm"
-		style="background: rgba(245, 238, 220, 0.95); backdrop-filter: blur(10px);"
+		class="fixed top-0 right-0 left-0 z-100 h-20"
+		style="background: rgba(245, 238, 220, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow-fb-sm);"
 	>
-		<nav class="container-fb flex h-full items-center justify-between">
-			<a href="/" class="flex items-center gap-2">
-				<img src="/images/logo.png" alt={BUSINESS_NAME} class="h-10 w-10 rounded-full object-cover" />
+		<div class="container-fb flex h-full items-center justify-between gap-8">
+			<a href="/" class="flex shrink-0 items-center gap-3">
+				<img src="/images/logo.png" alt={BUSINESS_NAME} class="h-14 w-auto object-contain" />
 				<span class="font-heading text-xl text-(--color-green)">{BUSINESS_NAME}</span>
 			</a>
 
-			<div class="hidden items-center gap-1 min-[861px]:flex">
+			<nav class="nav-desktop items-center gap-1" aria-label="Main navigation">
 				{#each navItems as item (item.href)}
 					<a href={item.href} class="nav-link" class:active={isActive(item.href)}>{item.label}</a>
 				{/each}
-			</div>
+			</nav>
 
-			<div class="hidden min-[861px]:block">
+			<div class="nav-desktop">
 				<a
 					href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
 					target="_blank"
@@ -62,7 +62,7 @@
 			</div>
 
 			<button
-				class="burger min-[861px]:hidden"
+				class="burger"
 				class:open={menuOpen}
 				aria-label="Toggle menu"
 				aria-expanded={menuOpen}
@@ -72,87 +72,83 @@
 				<span></span>
 				<span></span>
 			</button>
-		</nav>
+		</div>
 	</header>
 
 	<!-- Mobile off-canvas nav -->
 	<div
-		class="fixed inset-0 z-40 bg-black/30 transition-opacity min-[861px]:hidden {menuOpen
+		class="fixed inset-0 z-100 bg-black/30 transition-opacity {menuOpen
 			? 'opacity-100'
 			: 'pointer-events-none opacity-0'}"
 		onclick={closeMenu}
 		role="presentation"
 	></div>
-	<aside
-		class="fixed top-0 right-0 z-50 h-full w-4/5 max-w-[320px] bg-(--color-beige) shadow-[var(--shadow-fb-lg)] transition-transform duration-300 min-[861px]:hidden {menuOpen
-			? 'translate-x-0'
-			: 'translate-x-full'}"
-	>
-		<div class="flex flex-col gap-1 px-6 pt-24">
-			{#each navItems as item (item.href)}
-				<a href={item.href} class="nav-link" class:active={isActive(item.href)} onclick={closeMenu}>
-					{item.label}
-				</a>
-			{/each}
-			<a
-				href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
-				target="_blank"
-				rel="noopener"
-				class="btn btn-whatsapp mt-4"
-				onclick={closeMenu}
-			>
-				Book on WhatsApp
+	<aside class="nav-mobile-panel flex flex-col justify-center gap-2 p-8" class:open={menuOpen}>
+		{#each navItems as item (item.href)}
+			<a href={item.href} class="nav-link" class:active={isActive(item.href)} onclick={closeMenu}>
+				{item.label}
 			</a>
-		</div>
+		{/each}
+		<a
+			href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+			target="_blank"
+			rel="noopener"
+			class="btn btn-whatsapp mt-4"
+			onclick={closeMenu}
+		>
+			Book on WhatsApp
+		</a>
 	</aside>
 
 	<main class="flex-1 pt-20">
 		{@render children()}
 	</main>
 
-	<footer id="contact" class="bg-(--color-dark) py-16 text-(--color-beige)">
-		<div class="container-fb grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+	<footer id="contact" class="bg-(--color-dark) pt-16 text-(--color-beige)">
+		<div class="container-fb footer-grid pb-12">
 			<div>
 				<p class="font-heading text-lg text-(--color-beige)">{BUSINESS_NAME}</p>
-				<p class="mt-3 text-sm text-white/60">
+				<p class="mt-3 text-sm text-white/80">
 					Electric scooter rental &mdash; Tamraght &amp; Taghazout, Morocco.
 				</p>
+				<div class="mt-4 flex gap-3">
+					<a
+						href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+						target="_blank"
+						rel="noopener"
+						class="footer-social"
+						aria-label="Book on WhatsApp"
+					>
+						💬
+					</a>
+				</div>
 			</div>
 			<div>
-				<p class="text-sm font-semibold tracking-wider text-(--color-orange) uppercase">Navigation</p>
-				<ul class="mt-3 space-y-2 text-sm text-white/70">
-					<li><a href="/#fleet" class="hover:text-white">Fleet</a></li>
-					<li><a href="/#pricing" class="hover:text-white">Pricing</a></li>
-					<li><a href="/availability" class="hover:text-white">Availability</a></li>
+				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Navigation</h4>
+				<ul class="mt-5 space-y-2 text-sm text-white/80">
+					<li><a href="/#fleet" class="hover:text-(--color-orange)">Fleet</a></li>
+					<li><a href="/#pricing" class="hover:text-(--color-orange)">Pricing</a></li>
+					<li><a href="/availability" class="hover:text-(--color-orange)">Availability</a></li>
 				</ul>
 			</div>
 			<div>
-				<p class="text-sm font-semibold tracking-wider text-(--color-orange) uppercase">Information</p>
-				<ul class="mt-3 space-y-2 text-sm text-white/70">
-					<li><a href="/#how-it-works" class="hover:text-white">How it works</a></li>
-					<li><a href="/#faq" class="hover:text-white">FAQ</a></li>
+				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Information</h4>
+				<ul class="mt-5 space-y-2 text-sm text-white/80">
+					<li><a href="/#how-it-works" class="hover:text-(--color-orange)">How it works</a></li>
+					<li><a href="/#faq" class="hover:text-(--color-orange)">FAQ</a></li>
 				</ul>
 			</div>
 			<div>
-				<p class="text-sm font-semibold tracking-wider text-(--color-orange) uppercase">Contact</p>
-				<ul class="mt-3 space-y-3 text-sm text-white/70">
+				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Contact</h4>
+				<ul class="mt-5 space-y-2 text-sm text-white/80">
 					<li>Tamraght &amp; Taghazout, Morocco</li>
-					<li>
-						<a
-							href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
-							target="_blank"
-							rel="noopener"
-							class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-(--color-whatsapp) text-white hover:bg-(--color-whatsapp-dark)"
-							aria-label="Book on WhatsApp"
-						>
-							💬
-						</a>
-					</li>
 				</ul>
 			</div>
 		</div>
-		<div class="container-fb mt-10 border-t border-white/10 pt-6 text-xs text-white/40">
-			&copy; {new Date().getFullYear()} {BUSINESS_NAME}. All rights reserved.
+		<div class="border-t border-white/10 py-6 text-center text-[0.82rem] text-white/70">
+			<div class="container-fb">
+				&copy; {new Date().getFullYear()} {BUSINESS_NAME}. All rights reserved.
+			</div>
 		</div>
 	</footer>
 
