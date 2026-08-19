@@ -3,9 +3,22 @@
 	import { BUSINESS_NAME } from '$lib/config';
 	import { waLink } from '$lib/whatsapp';
 	import { reveal } from '$lib/actions/reveal';
+	import { currentTranslation, getLang } from '$lib/i18n/store.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+
+	let t = $derived(currentTranslation());
+
+	const LOCALE_MAP: Record<string, string> = {
+		en: 'en-GB',
+		fr: 'fr-FR',
+		nl: 'nl-NL',
+		de: 'de-DE',
+		es: 'es-ES',
+		it: 'it-IT',
+		ar: 'ar-MA'
+	};
 
 	const DAYS_AHEAD = 21;
 
@@ -34,7 +47,8 @@
 	}
 
 	function dayLabel(d: Date): string {
-		return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+		const locale = LOCALE_MAP[getLang()] ?? 'en-GB';
+		return d.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' });
 	}
 
 	let scooterId = $state(data.scooters[0]?.id || '');
@@ -51,9 +65,7 @@
 		if (!scooter) return;
 
 		if (!startDate || !endDate) {
-			const href = waLink(
-				`Hi! I'd like to rent the ${scooter.name} from ${BUSINESS_NAME}. Is it available?`
-			);
+			const href = waLink(t.messages.scooterAsk(BUSINESS_NAME, scooter.name));
 			window.open(href, '_blank', 'noopener');
 			return;
 		}
@@ -74,16 +86,14 @@
 			const body = await res.json();
 
 			if (!res.ok) {
-				errorMessage = body.error ?? 'Something went wrong. Please try again.';
+				errorMessage = body.error ?? t.availability.error_generic;
 				return;
 			}
 
-			const href = waLink(
-				`Hi! I'd like to book the ${scooter.name} from ${BUSINESS_NAME}, ${startDate} to ${endDate}. Can you confirm?`
-			);
+			const href = waLink(t.messages.bookingDates(BUSINESS_NAME, scooter.name, startDate, endDate));
 			window.open(href, '_blank', 'noopener');
 		} catch {
-			errorMessage = 'Network error. Please try again.';
+			errorMessage = t.availability.error_network;
 		} finally {
 			submitting = false;
 		}
@@ -98,10 +108,9 @@
 
 <section class="page-header-fb">
 	<div class="container-fb">
-		<h1 class="text-3xl">Scooter availability</h1>
+		<h1 class="text-3xl">{t.availability.title}</h1>
 		<p>
-			Green = free, red = already booked. Showing the next {DAYS_AHEAD} days for our scooters in
-			Tamraght &amp; Taghazout.
+			{t.availability.subtitle(DAYS_AHEAD)}
 		</p>
 	</div>
 </section>
@@ -115,7 +124,7 @@
 			<thead>
 				<tr>
 					<th class="sticky left-0 bg-white px-3 py-2 text-left font-semibold text-(--color-green)"
-						>Scooter</th
+						>{t.availability.scooter_col}</th
 					>
 					{#each days as day (day.toISOString())}
 						<th class="whitespace-nowrap px-2 py-2 text-center font-medium text-(--color-gray)">
@@ -136,8 +145,8 @@
 							<td class="px-1 py-2 text-center">
 								<span
 									class="inline-block h-4 w-4 rounded-sm {booked ? 'bg-red-400' : 'bg-green-500'}"
-									title={booked ? 'Booked' : 'Free'}
-									aria-label={booked ? 'Booked' : 'Free'}
+									title={booked ? t.availability.booked : t.availability.free}
+									aria-label={booked ? t.availability.booked : t.availability.free}
 								></span>
 							</td>
 						{/each}
@@ -151,13 +160,13 @@
 		class="mx-auto mt-12 max-w-lg rounded-[var(--radius-fb-lg)] bg-white p-8 shadow-[var(--shadow-fb-sm)]"
 		use:reveal
 	>
-		<h2 class="font-heading text-xl">Book on WhatsApp</h2>
+		<h2 class="font-heading text-xl">{t.availability.booking_title}</h2>
 		<p class="mt-2 text-sm text-(--color-dark)/70">
-			Pick a scooter and your dates &mdash; we'll open WhatsApp with your request pre-filled.
+			{t.availability.booking_subtitle}
 		</p>
 		<form class="mt-6 space-y-4" onsubmit={handleBook}>
 			<div>
-				<label for="scooter" class="block text-sm font-medium text-(--color-dark)">Scooter</label>
+				<label for="scooter" class="block text-sm font-medium text-(--color-dark)">{t.availability.scooter_label}</label>
 				<select
 					id="scooter"
 					bind:value={scooterId}
@@ -170,7 +179,7 @@
 			</div>
 			<div class="grid grid-cols-2 gap-4">
 				<div>
-					<label for="start" class="block text-sm font-medium text-(--color-dark)">Start date</label>
+					<label for="start" class="block text-sm font-medium text-(--color-dark)">{t.availability.start_label}</label>
 					<input
 						id="start"
 						type="date"
@@ -179,7 +188,7 @@
 					/>
 				</div>
 				<div>
-					<label for="end" class="block text-sm font-medium text-(--color-dark)">End date</label>
+					<label for="end" class="block text-sm font-medium text-(--color-dark)">{t.availability.end_label}</label>
 					<input
 						id="end"
 						type="date"
@@ -195,7 +204,7 @@
 
 			<button type="submit" disabled={submitting} class="btn btn-whatsapp w-full disabled:opacity-50">
 				{#if !submitting}<span>💬</span>{/if}
-				<span>{submitting ? 'Preparing…' : 'Book on WhatsApp'}</span>
+				<span>{submitting ? t.availability.preparing : t.availability.submit}</span>
 			</button>
 		</form>
 	</div>

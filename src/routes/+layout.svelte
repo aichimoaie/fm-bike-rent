@@ -5,21 +5,16 @@
 	import { waLink, formatPhoneDisplay } from '$lib/whatsapp';
 	import WhatsAppFloat from '$lib/components/WhatsAppFloat.svelte';
 	import { page } from '$app/state';
+	import { initLang, getLang, setLang, currentTranslation, LANGUAGES } from '$lib/i18n/store.svelte';
 
 	let { children } = $props();
 
-	let menuOpen = $state(false);
+	initLang();
 
-	const languages = [
-		{ code: 'en', label: 'English', flag: '🇬🇧' },
-		{ code: 'fr', label: 'Français', flag: '🇫🇷' },
-		{ code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
-		{ code: 'de', label: 'Deutsch', flag: '🇩🇪' },
-		{ code: 'es', label: 'Español', flag: '🇪🇸' },
-		{ code: 'it', label: 'Italiano', flag: '🇮🇹' },
-		{ code: 'ar', label: 'العربية', flag: '🇲🇦' }
-	];
-	let currentLang = $state(languages[0]);
+	let t = $derived(currentTranslation());
+	let lang = $derived(getLang());
+
+	let menuOpen = $state(false);
 	let langOpen = $state(false);
 	let langSwitcherEl: HTMLDivElement | undefined = $state();
 
@@ -29,14 +24,19 @@
 		}
 	}
 
-	const navItems = [
-		{ href: '/', label: 'Home' },
-		{ href: '/#fleet', label: 'Packages' },
-		{ href: '/#how-it-works', label: 'How it works' },
-		{ href: '/#pricing', label: 'Pricing' },
-		{ href: '/#faq', label: 'FAQ' },
-		{ href: '/#contact', label: 'Contact' }
-	];
+	$effect(() => {
+		document.documentElement.lang = lang;
+		document.documentElement.dir = t.dir;
+	});
+
+	let navItems = $derived([
+		{ href: '/', label: t.nav.home },
+		{ href: '/#fleet', label: t.nav.packages },
+		{ href: '/#how-it-works', label: t.nav.how_it_works },
+		{ href: '/#pricing', label: t.nav.pricing },
+		{ href: '/#faq', label: t.nav.faq },
+		{ href: '/#contact', label: t.nav.contact }
+	]);
 
 	function isActive(href: string): boolean {
 		if (href.startsWith('/#')) return false;
@@ -46,6 +46,8 @@
 	function closeMenu() {
 		menuOpen = false;
 	}
+
+	let currentLangMeta = $derived(LANGUAGES.find((l) => l.code === lang) ?? LANGUAGES[0]);
 </script>
 
 <svelte:head>
@@ -76,21 +78,21 @@
 					aria-label="Change language"
 					onclick={() => (langOpen = !langOpen)}
 				>
-					<span class="lang-flag">{currentLang.flag}</span>
-					<span>{currentLang.code.toUpperCase()}</span>
+					<span class="lang-flag">{currentLangMeta.flag}</span>
+					<span>{currentLangMeta.code.toUpperCase()}</span>
 				</button>
 				<div class="lang-dropdown">
-					{#each languages as lang (lang.code)}
+					{#each LANGUAGES as langMeta (langMeta.code)}
 						<button
 							class="lang-option"
-							class:active={lang.code === currentLang.code}
+							class:active={langMeta.code === lang}
 							onclick={() => {
-								currentLang = lang;
+								setLang(langMeta.code);
 								langOpen = false;
 							}}
 						>
-							<span class="lang-flag">{lang.flag}</span>
-							<span>{lang.label}</span>
+							<span class="lang-flag">{langMeta.flag}</span>
+							<span>{langMeta.label}</span>
 						</button>
 					{/each}
 				</div>
@@ -128,14 +130,14 @@
 				</a>
 			{/each}
 			<a
-				href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+				href={waLink(t.messages.generic(BUSINESS_NAME))}
 				target="_blank"
 				rel="noopener"
 				class="btn btn-whatsapp mt-4"
 				onclick={closeMenu}
 			>
 				<span>💬</span>
-				<span>Book on WhatsApp</span>
+				<span>{t.common.book_whatsapp}</span>
 			</a>
 		</aside>
 	</header>
@@ -149,7 +151,7 @@
 			<div>
 				<p class="font-heading text-lg text-(--color-beige)">{BUSINESS_NAME}</p>
 				<p class="mt-3 text-sm text-white/80">
-					Electric scooter rental &mdash; Tamraght &amp; Taghazout, Morocco.
+					{t.footer.tagline}
 				</p>
 				<div class="mt-4 flex gap-3">
 					<a
@@ -164,26 +166,26 @@
 				</div>
 			</div>
 			<div>
-				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Navigation</h4>
+				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">{t.footer.nav_title}</h4>
 				<ul class="mt-5 space-y-2 text-sm text-white/80">
-					<li><a href="/" class="hover:text-(--color-orange)">Home</a></li>
-					<li><a href="/#fleet" class="hover:text-(--color-orange)">Packages</a></li>
-					<li><a href="/#pricing" class="hover:text-(--color-orange)">Pricing</a></li>
+					<li><a href="/" class="hover:text-(--color-orange)">{t.nav.home}</a></li>
+					<li><a href="/#fleet" class="hover:text-(--color-orange)">{t.nav.packages}</a></li>
+					<li><a href="/#pricing" class="hover:text-(--color-orange)">{t.nav.pricing}</a></li>
 				</ul>
 			</div>
 			<div>
-				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Information</h4>
+				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">{t.footer.info_title}</h4>
 				<ul class="mt-5 space-y-2 text-sm text-white/80">
-					<li><a href="/#how-it-works" class="hover:text-(--color-orange)">How it works</a></li>
-					<li><a href="/#faq" class="hover:text-(--color-orange)">FAQ</a></li>
+					<li><a href="/#how-it-works" class="hover:text-(--color-orange)">{t.nav.how_it_works}</a></li>
+					<li><a href="/#faq" class="hover:text-(--color-orange)">{t.nav.faq}</a></li>
 				</ul>
 			</div>
 			<div>
-				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Contact</h4>
+				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">{t.footer.contact_title}</h4>
 				<ul class="mt-5 space-y-2 text-sm text-white/80">
 					<li>
 						<a
-							href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+							href={waLink(t.messages.generic(BUSINESS_NAME))}
 							target="_blank"
 							rel="noopener"
 							class="hover:text-(--color-orange)"
@@ -191,13 +193,13 @@
 							📱 {formatPhoneDisplay(OWNER_WHATSAPP_NUMBER)}
 						</a>
 					</li>
-					<li>📍 Tamraght &amp; Taghazout, Morocco</li>
+					<li>📍 {t.footer.location}</li>
 				</ul>
 			</div>
 		</div>
 		<div class="border-t border-white/10 py-6 text-center text-[0.82rem] text-white/70">
 			<div class="container-fb">
-				&copy; {new Date().getFullYear()} {BUSINESS_NAME}. All rights reserved.
+				&copy; {new Date().getFullYear()} {BUSINESS_NAME}. {t.footer.rights}
 			</div>
 		</div>
 	</footer>

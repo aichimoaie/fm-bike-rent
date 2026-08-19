@@ -708,3 +708,38 @@
 	70% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 0 0 16px rgba(37, 211, 102, 0); }
 	100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 0 0 0 rgba(37, 211, 102, 0); }
 }
+
+/* ---------- RTL (Arabic) ---------- */
+html[dir='rtl'] .section-tag,
+html[dir='rtl'] .card-fb-body,
+html[dir='rtl'] .hero-fb-content {
+	text-align: right;
+}
+html[dir='rtl'] .hero-fb-content {
+	text-align: center;
+}
+html[dir='rtl'] .card-fb-image {
+	direction: ltr;
+}
+html[dir='rtl'] .lang-dropdown {
+	right: auto;
+	left: 0;
+}
+html[dir='rtl'] .nav-link.active::after {
+	left: auto;
+	right: 1rem;
+}
+html[dir='rtl'] .whatsapp-float .wa-label {
+	right: auto;
+	left: 70px;
+}
+html[dir='rtl'] .whatsapp-float:hover .wa-label {
+	transform: translateY(-50%) translateX(8px);
+}
+html[dir='rtl'] .nav-mobile-panel {
+	right: auto;
+	left: -100%;
+}
+html[dir='rtl'] .nav-mobile-panel.open {
+	left: 0;
+}

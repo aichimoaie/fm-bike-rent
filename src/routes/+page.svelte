@@ -3,9 +3,12 @@
 	import { BUSINESS_NAME, OWNER_INSTAGRAM_HANDLE } from '$lib/config';
 	import { waLink } from '$lib/whatsapp';
 	import { reveal } from '$lib/actions/reveal';
+	import { currentTranslation } from '$lib/i18n/store.svelte';
+
+	let t = $derived(currentTranslation());
 
 	function packageWaLink(tierLabel: string): string {
-		return waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME} for ${tierLabel}. Is it available?`);
+		return waLink(t.messages.packageAsk(BUSINESS_NAME, tierLabel));
 	}
 
 	const fleetImages = [
@@ -14,30 +17,16 @@
 		'/images/rockrider-e-expl-500s-lifestyle.jpg'
 	];
 
-	const packages = [
-		{
-			label: '1-3 Days',
-			tag: 'Short trip',
-			pricePerDay: 150,
-			description: 'Perfect for a quick surf trip or a long weekend cruising the coast.',
-			image: fleetImages[0]
-		},
-		{
-			label: '4-7 Days',
-			tag: 'Week-long',
-			pricePerDay: 130,
-			description: 'Our most popular option — a full week to explore Tamraght and Taghazout.',
-			image: fleetImages[1],
-			popular: true
-		},
-		{
-			label: '11+ Days',
-			tag: 'Extended stay',
-			pricePerDay: 110,
-			description: 'Best per-day rate for longer stays along the coast.',
-			image: fleetImages[2]
-		}
-	];
+	const pricePerDay = [150, 130, 110];
+
+	let packages = $derived(
+		t.packages.tiers.map((tier, i) => ({
+			...tier,
+			pricePerDay: pricePerDay[i],
+			image: fleetImages[i],
+			popular: i === 1
+		}))
+	);
 
 	const galleryImages = [
 		'/images/gallery-argan-trail.jpg',
@@ -46,25 +35,6 @@
 		'/images/anti-atlas.jpg',
 		'/images/atlas-road.jpg',
 		'/images/berber-village.jpg'
-	];
-
-	const faqs = [
-		{
-			q: 'Where do I pick up the scooter?',
-			a: 'Pickup is arranged directly with us in Tamraght, a short ride from Taghazout — exact location confirmed over WhatsApp when you book.'
-		},
-		{
-			q: 'Do I need a license?',
-			a: 'A valid driving license is required. Bring it with you at pickup.'
-		},
-		{
-			q: 'What if the scooter I want is booked?',
-			a: 'Check the live availability page for open dates, or message us on WhatsApp — we sometimes have last-minute openings.'
-		},
-		{
-			q: 'How do I confirm a reservation?',
-			a: "Tap any \"Book on WhatsApp\" button — it opens a WhatsApp chat with your request pre-filled, and we confirm from there."
-		}
 	];
 </script>
 
@@ -75,70 +45,57 @@
 
 <section class="hero-fb" style="background-image: url('/images/hero-canyon.jpg');">
 	<div class="hero-fb-content">
-		<p class="text-sm font-semibold tracking-widest uppercase">Tamraght &mdash; Taghazout &mdash; Morocco</p>
+		<p class="text-sm font-semibold tracking-widest uppercase">{t.hero.location}</p>
 		<h1 class="mx-auto mt-4 max-w-3xl text-4xl sm:text-6xl">
-			Rent an electric scooter in Tamraght &amp; Taghazout
+			{t.hero.title}
 		</h1>
 		<p class="hero-fb-subtitle mx-auto mt-4 max-w-xl text-lg font-light">
-			Fast, easy e-scooter rental for surf trips, beach cruising and getting around town. Message
-			us on WhatsApp and we'll confirm your dates &mdash; just like booking with a friend.
+			{t.hero.subtitle}
 		</p>
 		<div class="hero-fb-buttons mt-10">
 			<a
-				href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+				href={waLink(t.messages.generic(BUSINESS_NAME))}
 				target="_blank"
 				rel="noopener"
 				class="btn btn-whatsapp btn-lg"
 			>
 				<span>💬</span>
-				<span>Book on WhatsApp</span>
+				<span>{t.common.book_whatsapp}</span>
 			</a>
-			<a href="/availability" class="btn btn-secondary btn-lg">Check availability</a>
+			<a href="/availability" class="btn btn-secondary btn-lg">{t.common.check_availability}</a>
 		</div>
 	</div>
-	<div class="hero-fb-scroll">Scroll</div>
+	<div class="hero-fb-scroll">{t.hero.scroll}</div>
 </section>
 
 <section class="section-fb bg-white">
 	<div class="container-fb">
-	<div class="mx-auto max-w-[750px] text-center" use:reveal>
-		<p class="section-tag">Why book with us</p>
-		<h2 class="mt-4 text-3xl">Easy, local, no-hassle rental</h2>
-		<div class="divider"></div>
-	</div>
-	<div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-		<div class="feature-fb" use:reveal>
-			<div class="feature-fb-icon">📍</div>
-			<h3 class="text-base">Local pickup</h3>
-			<p class="mt-2 text-sm text-(--color-gray)">Pickup in Tamraght, minutes from Taghazout.</p>
+		<div class="mx-auto max-w-[750px] text-center" use:reveal>
+			<p class="section-tag">{t.features.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.features.heading}</h2>
+			<div class="divider"></div>
 		</div>
-		<div class="feature-fb" use:reveal>
-			<div class="feature-fb-icon">🛵</div>
-			<h3 class="text-base">Well-maintained scooters</h3>
-			<p class="mt-2 text-sm text-(--color-gray)">Electric, comfortable, ready for coast and town rides.</p>
+		<div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+			{#each t.features.items as item, i (i)}
+				{@const icons = ['📍', '🛵', '📅', '💬']}
+				<div class="feature-fb" use:reveal>
+					<div class="feature-fb-icon">{icons[i]}</div>
+					<h3 class="text-base">{item.title}</h3>
+					<p class="mt-2 text-sm text-(--color-gray)">{item.desc}</p>
+				</div>
+			{/each}
 		</div>
-		<div class="feature-fb" use:reveal>
-			<div class="feature-fb-icon">📅</div>
-			<h3 class="text-base">Flexible dates</h3>
-			<p class="mt-2 text-sm text-(--color-gray)">Check live availability and book the dates you need.</p>
-		</div>
-		<div class="feature-fb" use:reveal>
-			<div class="feature-fb-icon">💬</div>
-			<h3 class="text-base">WhatsApp support</h3>
-			<p class="mt-2 text-sm text-(--color-gray)">Questions before or during your rental? Message us directly.</p>
-		</div>
-	</div>
 	</div>
 </section>
 
 <section id="fleet" class="section-fb bg-(--color-beige-dark)">
 	<div class="container-fb">
 		<div class="mx-auto max-w-[750px] text-center" use:reveal>
-			<p class="section-tag">Packages</p>
-			<h2 class="mt-4 text-3xl">Rental packages</h2>
+			<p class="section-tag">{t.packages.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.packages.heading}</h2>
 			<div class="divider"></div>
 			<p class="mt-4 text-(--color-gray)">
-				The longer you ride, the less you pay per day.
+				{t.packages.subtitle}
 			</p>
 		</div>
 
@@ -148,22 +105,22 @@
 					<div class="card-fb-image">
 						<img src={pkg.image} alt={`${pkg.label} scooter rental package`} />
 						{#if pkg.popular}
-							<span class="card-fb-badge">Most popular</span>
+							<span class="card-fb-badge">{t.packages.popular}</span>
 						{/if}
 					</div>
 					<div class="card-fb-body">
 						<h3 class="card-fb-title">{pkg.label}</h3>
 						<p class="text-sm font-medium text-(--color-orange-dark)">{pkg.tag}</p>
-						<p class="mt-3 text-sm text-(--color-gray)">{pkg.description}</p>
+						<p class="mt-3 text-sm text-(--color-gray)">{pkg.desc}</p>
 
 						<div class="card-fb-footer">
 							<div class="flex items-baseline gap-2">
 								<span class="card-fb-price">{pkg.pricePerDay} MAD</span>
-								<span class="card-fb-price-unit">/ day</span>
+								<span class="card-fb-price-unit">{t.common.per_day}</span>
 							</div>
 							<a href={packageWaLink(pkg.label)} target="_blank" rel="noopener" class="btn btn-whatsapp">
 								<span>💬</span>
-								<span>Book on WhatsApp</span>
+								<span>{t.common.book_whatsapp}</span>
 							</a>
 						</div>
 					</div>
@@ -171,8 +128,9 @@
 			{/each}
 		</div>
 		<p class="mt-8 text-center text-xs text-(--color-gray)">
-			Rates shown per scooter, per day. Check <a href="/availability" class="underline">live availability</a>
-			for our current fleet.
+			{t.packages.footnote_pre}
+			<a href="/availability" class="underline">{t.common.live_availability}</a>
+			{t.packages.footnote_post}
 		</p>
 	</div>
 </section>
@@ -180,8 +138,8 @@
 <section id="how-it-works" class="section-fb bg-white">
 	<div class="container-fb">
 		<div class="mx-auto max-w-[750px] text-center" use:reveal>
-			<p class="section-tag">Process</p>
-			<h2 class="mt-4 text-3xl">How booking works</h2>
+			<p class="section-tag">{t.how_it_works.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.how_it_works.heading}</h2>
 			<div class="divider"></div>
 		</div>
 		<div class="mt-14 grid gap-10 sm:grid-cols-3">
@@ -191,10 +149,11 @@
 				>
 					1
 				</div>
-				<h3 class="mt-4 font-semibold text-(--color-green)">Pick your scooter &amp; dates</h3>
+				<h3 class="mt-4 font-semibold text-(--color-green)">{t.how_it_works.steps[0].title}</h3>
 				<p class="mt-2 text-sm text-(--color-gray)">
-					Check the <a href="/availability" class="text-(--color-orange-dark) underline">availability page</a>
-					and choose a free date range.
+					{t.how_it_works.step1_pre}
+					<a href="/availability" class="text-(--color-orange-dark) underline">{t.common.availability_page}</a>
+					{t.how_it_works.step1_post}
 				</p>
 			</div>
 			<div class="text-center" use:reveal>
@@ -203,9 +162,9 @@
 				>
 					2
 				</div>
-				<h3 class="mt-4 font-semibold text-(--color-green)">Message us on WhatsApp</h3>
+				<h3 class="mt-4 font-semibold text-(--color-green)">{t.how_it_works.steps[1].title}</h3>
 				<p class="mt-2 text-sm text-(--color-gray)">
-					Tap any "Book on WhatsApp" button &mdash; it opens a chat with your request pre-filled.
+					{t.how_it_works.steps[1].desc}
 				</p>
 			</div>
 			<div class="text-center" use:reveal>
@@ -214,9 +173,9 @@
 				>
 					3
 				</div>
-				<h3 class="mt-4 font-semibold text-(--color-green)">Confirm &amp; ride</h3>
+				<h3 class="mt-4 font-semibold text-(--color-green)">{t.how_it_works.steps[2].title}</h3>
 				<p class="mt-2 text-sm text-(--color-gray)">
-					We confirm your dates and pickup details directly over WhatsApp.
+					{t.how_it_works.steps[2].desc}
 				</p>
 			</div>
 		</div>
@@ -226,23 +185,23 @@
 <section id="pricing" class="section-fb bg-(--color-beige-dark) text-center">
 	<div class="container-fb">
 		<div class="mx-auto max-w-[750px]" use:reveal>
-			<p class="section-tag">Pricing</p>
-			<h2 class="mt-4 text-3xl">Simple daily rates</h2>
+			<p class="section-tag">{t.pricing.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.pricing.heading}</h2>
 			<div class="divider"></div>
-			<p class="mt-4 text-(--color-gray)">No hidden fees.</p>
+			<p class="mt-4 text-(--color-gray)">{t.pricing.subtitle}</p>
 		</div>
 		<div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2">
 			<div class="card-fb p-8 text-left" use:reveal>
-				<p class="text-sm font-semibold text-(--color-orange-dark)">City Cruiser</p>
+				<p class="text-sm font-semibold text-(--color-orange-dark)">{t.pricing.cards[0].name}</p>
 				<p class="card-fb-price mt-2 text-4xl">150 MAD</p>
-				<p class="text-sm text-(--color-gray)">per day</p>
-				<p class="mt-4 text-sm text-(--color-gray)">Comfortable and light &mdash; ideal for beach-to-town rides.</p>
+				<p class="text-sm text-(--color-gray)">{t.pricing.per_day}</p>
+				<p class="mt-4 text-sm text-(--color-gray)">{t.pricing.cards[0].desc}</p>
 			</div>
 			<div class="card-fb p-8 text-left" use:reveal>
-				<p class="text-sm font-semibold text-(--color-orange-dark)">Long Range</p>
+				<p class="text-sm font-semibold text-(--color-orange-dark)">{t.pricing.cards[1].name}</p>
 				<p class="card-fb-price mt-2 text-4xl">200 MAD</p>
-				<p class="text-sm text-(--color-gray)">per day</p>
-				<p class="mt-4 text-sm text-(--color-gray)">Bigger battery for longer surf-spot-hopping days.</p>
+				<p class="text-sm text-(--color-gray)">{t.pricing.per_day}</p>
+				<p class="mt-4 text-sm text-(--color-gray)">{t.pricing.cards[1].desc}</p>
 			</div>
 		</div>
 	</div>
@@ -251,12 +210,12 @@
 <section id="faq" class="section-fb bg-white">
 	<div class="container-fb max-w-3xl">
 		<div class="text-center" use:reveal>
-			<p class="section-tag">FAQ</p>
-			<h2 class="mt-4 text-3xl">Frequently asked questions</h2>
+			<p class="section-tag">{t.faq.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.faq.heading}</h2>
 			<div class="divider"></div>
 		</div>
 		<dl class="mt-12 space-y-8" use:reveal>
-			{#each faqs as faq}
+			{#each t.faq.items as faq, i (i)}
 				<div class="border-b border-(--color-light-gray) pb-8">
 					<dt class="font-semibold text-(--color-green)">{faq.q}</dt>
 					<dd class="mt-2 text-sm text-(--color-gray)">{faq.a}</dd>
@@ -269,10 +228,10 @@
 <section class="section-fb bg-(--color-beige-dark)">
 	<div class="container-fb text-center">
 		<div class="mx-auto max-w-[750px]" use:reveal>
-			<p class="section-tag">Instagram</p>
-			<h2 class="mt-4 text-3xl">Follow the ride live</h2>
+			<p class="section-tag">{t.instagram.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.instagram.heading}</h2>
 			<p class="mt-4 text-(--color-gray)">
-				@{OWNER_INSTAGRAM_HANDLE} &mdash; photos, videos and behind the scenes.
+				@{OWNER_INSTAGRAM_HANDLE} {t.instagram.subtitle}
 			</p>
 			<div class="divider"></div>
 		</div>
@@ -289,26 +248,26 @@
 			rel="noopener"
 			class="btn btn-primary mt-8"
 		>
-			Follow @{OWNER_INSTAGRAM_HANDLE}
+			{t.instagram.follow} @{OWNER_INSTAGRAM_HANDLE}
 		</a>
 	</div>
 </section>
 
 <section class="section-fb bg-white text-center">
 	<div class="container-fb" use:reveal>
-		<h2 class="text-3xl">Ready to ride?</h2>
+		<h2 class="text-3xl">{t.cta.heading}</h2>
 		<div class="divider"></div>
 		<p class="mx-auto mt-4 max-w-xl text-(--color-gray)">
-			Message us on WhatsApp now &mdash; we'll help you pick the right scooter and confirm your dates.
+			{t.cta.subtitle}
 		</p>
 		<a
-			href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+			href={waLink(t.messages.generic(BUSINESS_NAME))}
 			target="_blank"
 			rel="noopener"
 			class="btn btn-whatsapp btn-lg mt-8"
 		>
 			<span>💬</span>
-			<span>Book on WhatsApp</span>
+			<span>{t.common.book_whatsapp}</span>
 		</a>
 	</div>
 </section>

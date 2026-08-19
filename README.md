@@ -97,3 +97,9 @@ fleet or reservation volume grows.
   `src/lib/components/SeoHead.svelte`, uses semantic `<h1>`/`<h2>` headings
   mentioning Tamraght/Taghazout, and `/robots.txt` + `/sitemap.xml` are served
   dynamically (`src/routes/robots.txt`, `src/routes/sitemap.xml`).
+- **Multi-language**: the header's language switcher (`src/lib/i18n/`) fully
+  translates the site into English, French, Dutch, German, Spanish, Italian
+  and Arabic (Arabic also flips the page to RTL), including WhatsApp message
+  text. The chosen language persists in `localStorage`. Page `<title>`/meta
+  tags stay English-only (they're server-rendered before the client picks a
+  language) — see `src/lib/i18n/translations.ts` to add or edit copy.
