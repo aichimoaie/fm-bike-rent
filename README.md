@@ -35,6 +35,20 @@ created and seeded with 3 placeholder scooters automatically on first run.
 `npm run build && node build/index.js` runs the production build (reads `PORT`,
 defaults to 3000, and `DATABASE_PATH`).
 
+### Docker
+
+```sh
+docker build -t filios-bike .
+docker run -d -p 3000:3000 --env-file .env -v filios-data:/app/data filios-bike
+```
+
+The `-v filios-data:/app/data` volume persists the SQLite reservations file
+across container restarts/redeploys — without it, reservation data is lost
+each time the container is recreated. All `PUBLIC_*` config (WhatsApp number,
+Instagram handle, review URLs) is read from env vars **at runtime**
+(`$env/dynamic/public`, not `$env/static/public`), so changing them only
+needs a container restart with a new `.env`/`--env-file`, not a rebuild.
+
 ## What still needs to be filled in before going live
 
 1. **Owner's WhatsApp number** — set in `.env` (not committed; `.env` is

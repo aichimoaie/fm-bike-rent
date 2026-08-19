@@ -44,7 +44,8 @@ Single-operator e-scooter rental site for Tamraght/Taghazout, Morocco. Booking i
 - **i18n**: `Translation` interface in `translations.ts` is the source of truth — add a new UI string there first, then to all 7 language entries, or `svelte-check` will fail with missing-property errors pinpointing every call site.
 - **Scroll-reveal**: `.reveal`/`.reveal.visible` via IntersectionObserver (threshold 0.1, rootMargin `0px 0px -50px 0px`, fires once) is a Svelte action at `src/lib/actions/reveal.ts` (`use:reveal`).
 - **Double-booking prevention**: overlap check + insert run inside one SQLite transaction in `src/lib/server/db.ts` (`createReservationTxn`), not as separate steps.
-- **Env vars in SvelteKit**: read private server env through `$env/dynamic/private` (or `$env/static/private`), not raw `process.env` — the latter isn't reliably populated from `.env` under `vite dev`.
+- **Env vars in SvelteKit**: read private server env through `$env/dynamic/private` (or `$env/static/private`), not raw `process.env` — the latter isn't reliably populated from `.env` under `vite dev`. `src/lib/config.ts`'s `PUBLIC_*` vars use `$env/dynamic/public` (not `$env/static/public`) deliberately — static public env is inlined at *build* time, which broke the Docker build (no `.env` in the build context) and would otherwise require a full rebuild just to change the WhatsApp number/review URLs. Dynamic env reads at request time, so `docker run --env-file .env` (or any runtime env change) takes effect without rebuilding.
+- **Docker**: `Dockerfile` + `.dockerignore` at repo root, multi-stage (`node:22-alpine` builder with `python3 make g++` for better-sqlite3's native binding, pruned-`node_modules` runtime stage). Build/run commands in README's "Docker" section. Mount a volume at `/app/data` (`DATABASE_PATH=/app/data/data.sqlite3` is set in the image) or reservations are lost on container recreation.
 
 ## Maintaining this file
 

@@ -5,24 +5,24 @@
  * (see .env.example) once the captain's friend gives us the real number.
  * Format: full international number, digits only, no "+", no spaces
  * (e.g. a Moroccan mobile would look like "2126XXXXXXXX").
+ *
+ * Uses $env/dynamic/public (read at request time) rather than
+ * $env/static/public (inlined at build time) so these values can be changed
+ * via env vars at deploy time — e.g. `docker run --env-file .env` — without
+ * needing to rebuild the app/image each time.
  */
-import {
-	PUBLIC_OWNER_WHATSAPP_NUMBER,
-	PUBLIC_OWNER_INSTAGRAM_HANDLE,
-	PUBLIC_GOOGLE_REVIEW_URL,
-	PUBLIC_TRIPADVISOR_URL
-} from '$env/static/public';
+import { env } from '$env/dynamic/public';
 
-export const OWNER_WHATSAPP_NUMBER = PUBLIC_OWNER_WHATSAPP_NUMBER || '0000000000';
+export const OWNER_WHATSAPP_NUMBER = env.PUBLIC_OWNER_WHATSAPP_NUMBER || '0000000000';
 
 /** No "@" prefix. Fill in via PUBLIC_OWNER_INSTAGRAM_HANDLE once known (see .env.example). */
-export const OWNER_INSTAGRAM_HANDLE = PUBLIC_OWNER_INSTAGRAM_HANDLE || 'filiosbike';
+export const OWNER_INSTAGRAM_HANDLE = env.PUBLIC_OWNER_INSTAGRAM_HANDLE || 'filiosbike';
 
 /** Google Business Profile review/listing link. Fill in via PUBLIC_GOOGLE_REVIEW_URL once the listing exists. */
-export const GOOGLE_REVIEW_URL = PUBLIC_GOOGLE_REVIEW_URL || 'https://g.page/r/placeholder/review';
+export const GOOGLE_REVIEW_URL = env.PUBLIC_GOOGLE_REVIEW_URL || 'https://g.page/r/placeholder/review';
 
 /** TripAdvisor listing link. Fill in via PUBLIC_TRIPADVISOR_URL once the listing exists. */
-export const TRIPADVISOR_URL = PUBLIC_TRIPADVISOR_URL || 'https://www.tripadvisor.com/placeholder';
+export const TRIPADVISOR_URL = env.PUBLIC_TRIPADVISOR_URL || 'https://www.tripadvisor.com/placeholder';
 
 export const BUSINESS_NAME = "Filio's Bike";
 export const BUSINESS_LOCATION = 'Tamraght / Taghazout, Morocco';
