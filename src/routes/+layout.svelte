@@ -1,8 +1,8 @@
 <script lang="ts">
 	import '../lib/styles/app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { BUSINESS_NAME } from '$lib/config';
-	import { waLink } from '$lib/whatsapp';
+	import { BUSINESS_NAME, OWNER_WHATSAPP_NUMBER, OWNER_INSTAGRAM_HANDLE } from '$lib/config';
+	import { waLink, formatPhoneDisplay } from '$lib/whatsapp';
 	import WhatsAppFloat from '$lib/components/WhatsAppFloat.svelte';
 	import { page } from '$app/state';
 
@@ -31,7 +31,7 @@
 
 	const navItems = [
 		{ href: '/', label: 'Home' },
-		{ href: '/#fleet', label: 'Fleet' },
+		{ href: '/#fleet', label: 'Packages' },
 		{ href: '/#how-it-works', label: 'How it works' },
 		{ href: '/#pricing', label: 'Pricing' },
 		{ href: '/#faq', label: 'FAQ' },
@@ -153,13 +153,13 @@
 				</p>
 				<div class="mt-4 flex gap-3">
 					<a
-						href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+						href="https://instagram.com/{OWNER_INSTAGRAM_HANDLE}"
 						target="_blank"
 						rel="noopener"
 						class="footer-social"
-						aria-label="Book on WhatsApp"
+						aria-label="Instagram"
 					>
-						💬
+						📷
 					</a>
 				</div>
 			</div>
@@ -167,7 +167,7 @@
 				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Navigation</h4>
 				<ul class="mt-5 space-y-2 text-sm text-white/80">
 					<li><a href="/" class="hover:text-(--color-orange)">Home</a></li>
-					<li><a href="/#fleet" class="hover:text-(--color-orange)">Fleet</a></li>
+					<li><a href="/#fleet" class="hover:text-(--color-orange)">Packages</a></li>
 					<li><a href="/#pricing" class="hover:text-(--color-orange)">Pricing</a></li>
 				</ul>
 			</div>
@@ -181,7 +181,17 @@
 			<div>
 				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Contact</h4>
 				<ul class="mt-5 space-y-2 text-sm text-white/80">
-					<li>Tamraght &amp; Taghazout, Morocco</li>
+					<li>
+						<a
+							href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+							target="_blank"
+							rel="noopener"
+							class="hover:text-(--color-orange)"
+						>
+							📱 {formatPhoneDisplay(OWNER_WHATSAPP_NUMBER)}
+						</a>
+					</li>
+					<li>📍 Tamraght &amp; Taghazout, Morocco</li>
 				</ul>
 			</div>
 		</div>

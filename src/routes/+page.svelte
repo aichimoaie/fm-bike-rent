@@ -3,18 +3,40 @@
 	import { BUSINESS_NAME, OWNER_INSTAGRAM_HANDLE } from '$lib/config';
 	import { waLink } from '$lib/whatsapp';
 	import { reveal } from '$lib/actions/reveal';
-	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
-
-	function scooterWaLink(scooterName: string): string {
-		return waLink(`Hi! I'd like to rent the ${scooterName} from ${BUSINESS_NAME}. Is it available?`);
+	function packageWaLink(tierLabel: string): string {
+		return waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME} for ${tierLabel}. Is it available?`);
 	}
 
 	const fleetImages = [
 		'/images/fleet-bike-sunset-atlas.jpg',
 		'/images/fleet-bike-sunset-sky.jpg',
 		'/images/rockrider-e-expl-500s-lifestyle.jpg'
+	];
+
+	const packages = [
+		{
+			label: '1-3 Days',
+			tag: 'Short trip',
+			pricePerDay: 150,
+			description: 'Perfect for a quick surf trip or a long weekend cruising the coast.',
+			image: fleetImages[0]
+		},
+		{
+			label: '4-7 Days',
+			tag: 'Week-long',
+			pricePerDay: 130,
+			description: 'Our most popular option — a full week to explore Tamraght and Taghazout.',
+			image: fleetImages[1],
+			popular: true
+		},
+		{
+			label: '11+ Days',
+			tag: 'Extended stay',
+			pricePerDay: 110,
+			description: 'Best per-day rate for longer stays along the coast.',
+			image: fleetImages[2]
+		}
 	];
 
 	const galleryImages = [
@@ -77,7 +99,8 @@
 	<div class="hero-fb-scroll">Scroll</div>
 </section>
 
-<section class="section-fb container-fb">
+<section class="section-fb bg-white">
+	<div class="container-fb">
 	<div class="mx-auto max-w-[750px] text-center" use:reveal>
 		<p class="section-tag">Why book with us</p>
 		<h2 class="mt-4 text-3xl">Easy, local, no-hassle rental</h2>
@@ -105,57 +128,56 @@
 			<p class="mt-2 text-sm text-(--color-gray)">Questions before or during your rental? Message us directly.</p>
 		</div>
 	</div>
+	</div>
 </section>
 
-<section id="fleet" class="section-fb container-fb">
-	<div class="mx-auto max-w-[750px] text-center" use:reveal>
-		<p class="section-tag">Our fleet</p>
-		<h2 class="mt-4 text-3xl">Scooters available in Tamraght</h2>
-		<div class="divider"></div>
-		<p class="mt-4 text-(--color-gray)">
-			A small fleet, ready for Taghazout surf spots and the coast road in between.
+<section id="fleet" class="section-fb bg-(--color-beige-dark)">
+	<div class="container-fb">
+		<div class="mx-auto max-w-[750px] text-center" use:reveal>
+			<p class="section-tag">Packages</p>
+			<h2 class="mt-4 text-3xl">Rental packages</h2>
+			<div class="divider"></div>
+			<p class="mt-4 text-(--color-gray)">
+				The longer you ride, the less you pay per day.
+			</p>
+		</div>
+
+		<div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+			{#each packages as pkg (pkg.label)}
+				<article class="card-fb" use:reveal>
+					<div class="card-fb-image">
+						<img src={pkg.image} alt={`${pkg.label} scooter rental package`} />
+						{#if pkg.popular}
+							<span class="card-fb-badge">Most popular</span>
+						{/if}
+					</div>
+					<div class="card-fb-body">
+						<h3 class="card-fb-title">{pkg.label}</h3>
+						<p class="text-sm font-medium text-(--color-orange-dark)">{pkg.tag}</p>
+						<p class="mt-3 text-sm text-(--color-gray)">{pkg.description}</p>
+
+						<div class="card-fb-footer">
+							<div class="flex items-baseline gap-2">
+								<span class="card-fb-price">{pkg.pricePerDay} MAD</span>
+								<span class="card-fb-price-unit">/ day</span>
+							</div>
+							<a href={packageWaLink(pkg.label)} target="_blank" rel="noopener" class="btn btn-whatsapp">
+								<span>💬</span>
+								<span>Book on WhatsApp</span>
+							</a>
+						</div>
+					</div>
+				</article>
+			{/each}
+		</div>
+		<p class="mt-8 text-center text-xs text-(--color-gray)">
+			Rates shown per scooter, per day. Check <a href="/availability" class="underline">live availability</a>
+			for our current fleet.
 		</p>
 	</div>
-
-	<div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-		{#each data.scooters as scooter, i (scooter.id)}
-			<article class="card-fb" use:reveal>
-				<div class="card-fb-image">
-					<img src={fleetImages[i % fleetImages.length]} alt={`${scooter.name} scooter lifestyle photo`} />
-					{#if i === 0}
-						<span class="card-fb-badge">Most popular</span>
-					{/if}
-				</div>
-				<div class="card-fb-body">
-					<h3 class="card-fb-title">{scooter.name}</h3>
-					<p class="text-sm font-medium text-(--color-orange-dark)">{scooter.model}</p>
-					<p class="mt-3 text-sm text-(--color-gray)">{scooter.description}</p>
-
-					<ul class="card-fb-stats">
-						<li>⚡ Electric</li>
-						<li>🪪 License required</li>
-					</ul>
-
-					<div class="card-fb-footer">
-						<div class="flex items-baseline gap-2">
-							<span class="card-fb-price">{scooter.price_per_day} MAD</span>
-							<span class="card-fb-price-unit">/ day</span>
-						</div>
-						<a href={scooterWaLink(scooter.name)} target="_blank" rel="noopener" class="btn btn-whatsapp">
-							<span>💬</span>
-							<span>Book on WhatsApp</span>
-						</a>
-					</div>
-				</div>
-			</article>
-		{/each}
-	</div>
-	<p class="mt-8 text-center text-xs text-(--color-gray)">
-		Photos coming soon &mdash; placeholders shown above until real photos are added.
-	</p>
 </section>
 
-<section id="how-it-works" class="section-fb bg-(--color-beige-dark)">
+<section id="how-it-works" class="section-fb bg-white">
 	<div class="container-fb">
 		<div class="mx-auto max-w-[750px] text-center" use:reveal>
 			<p class="section-tag">Process</p>
@@ -201,30 +223,32 @@
 	</div>
 </section>
 
-<section id="pricing" class="section-fb container-fb text-center">
-	<div class="mx-auto max-w-[750px]" use:reveal>
-		<p class="section-tag">Pricing</p>
-		<h2 class="mt-4 text-3xl">Simple daily rates</h2>
-		<div class="divider"></div>
-		<p class="mt-4 text-(--color-gray)">No hidden fees.</p>
-	</div>
-	<div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2">
-		<div class="card-fb p-8 text-left" use:reveal>
-			<p class="text-sm font-semibold text-(--color-orange-dark)">City Cruiser</p>
-			<p class="card-fb-price mt-2 text-4xl">150 MAD</p>
-			<p class="text-sm text-(--color-gray)">per day</p>
-			<p class="mt-4 text-sm text-(--color-gray)">Comfortable and light &mdash; ideal for beach-to-town rides.</p>
+<section id="pricing" class="section-fb bg-(--color-beige-dark) text-center">
+	<div class="container-fb">
+		<div class="mx-auto max-w-[750px]" use:reveal>
+			<p class="section-tag">Pricing</p>
+			<h2 class="mt-4 text-3xl">Simple daily rates</h2>
+			<div class="divider"></div>
+			<p class="mt-4 text-(--color-gray)">No hidden fees.</p>
 		</div>
-		<div class="card-fb p-8 text-left" use:reveal>
-			<p class="text-sm font-semibold text-(--color-orange-dark)">Long Range</p>
-			<p class="card-fb-price mt-2 text-4xl">200 MAD</p>
-			<p class="text-sm text-(--color-gray)">per day</p>
-			<p class="mt-4 text-sm text-(--color-gray)">Bigger battery for longer surf-spot-hopping days.</p>
+		<div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2">
+			<div class="card-fb p-8 text-left" use:reveal>
+				<p class="text-sm font-semibold text-(--color-orange-dark)">City Cruiser</p>
+				<p class="card-fb-price mt-2 text-4xl">150 MAD</p>
+				<p class="text-sm text-(--color-gray)">per day</p>
+				<p class="mt-4 text-sm text-(--color-gray)">Comfortable and light &mdash; ideal for beach-to-town rides.</p>
+			</div>
+			<div class="card-fb p-8 text-left" use:reveal>
+				<p class="text-sm font-semibold text-(--color-orange-dark)">Long Range</p>
+				<p class="card-fb-price mt-2 text-4xl">200 MAD</p>
+				<p class="text-sm text-(--color-gray)">per day</p>
+				<p class="mt-4 text-sm text-(--color-gray)">Bigger battery for longer surf-spot-hopping days.</p>
+			</div>
 		</div>
 	</div>
 </section>
 
-<section id="faq" class="section-fb bg-(--color-beige-dark)">
+<section id="faq" class="section-fb bg-white">
 	<div class="container-fb max-w-3xl">
 		<div class="text-center" use:reveal>
 			<p class="section-tag">FAQ</p>
@@ -242,7 +266,7 @@
 	</div>
 </section>
 
-<section class="section-fb bg-white">
+<section class="section-fb bg-(--color-beige-dark)">
 	<div class="container-fb text-center">
 		<div class="mx-auto max-w-[750px]" use:reveal>
 			<p class="section-tag">Instagram</p>
@@ -270,8 +294,8 @@
 	</div>
 </section>
 
-<section class="section-fb container-fb text-center">
-	<div use:reveal>
+<section class="section-fb bg-white text-center">
+	<div class="container-fb" use:reveal>
 		<h2 class="text-3xl">Ready to ride?</h2>
 		<div class="divider"></div>
 		<p class="mx-auto mt-4 max-w-xl text-(--color-gray)">
