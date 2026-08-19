@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SeoHead from '$lib/components/SeoHead.svelte';
-	import { BUSINESS_NAME } from '$lib/config';
+	import { BUSINESS_NAME, OWNER_INSTAGRAM_HANDLE } from '$lib/config';
 	import { waLink } from '$lib/whatsapp';
 	import { reveal } from '$lib/actions/reveal';
 	import type { PageData } from './$types';
@@ -245,10 +245,10 @@
 <section class="section-fb bg-white">
 	<div class="container-fb text-center">
 		<div class="mx-auto max-w-[750px]" use:reveal>
-			<p class="section-tag">Scenery</p>
-			<h2 class="mt-4 text-3xl">Where you'll ride</h2>
+			<p class="section-tag">Instagram</p>
+			<h2 class="mt-4 text-3xl">Follow the ride live</h2>
 			<p class="mt-4 text-(--color-gray)">
-				Coast roads, argan trails and the Atlas foothills &mdash; all within reach from Tamraght.
+				@{OWNER_INSTAGRAM_HANDLE} &mdash; photos, videos and behind the scenes.
 			</p>
 			<div class="divider"></div>
 		</div>
@@ -260,12 +260,12 @@
 			{/each}
 		</div>
 		<a
-			href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+			href="https://instagram.com/{OWNER_INSTAGRAM_HANDLE}"
 			target="_blank"
 			rel="noopener"
 			class="btn btn-primary mt-8"
 		>
-			Book on WhatsApp
+			Follow @{OWNER_INSTAGRAM_HANDLE}
 		</a>
 	</div>
 </section>

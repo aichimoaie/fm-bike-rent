@@ -37,17 +37,23 @@ defaults to 3000, and `DATABASE_PATH`).
 
 ## What still needs to be filled in before going live
 
-1. **Owner's WhatsApp number** — set in `.env`. Currently set to
-   `40770141357` (from `PUBLIC_OWNER_WHATSAPP_NUMBER`, digits only,
-   international format, no `+`; see `.env.example` and `src/lib/config.ts`).
-   Double-check this is the correct, final number before going live.
-2. **Real scooter data & photos** — scooters are seeded in
+1. **Owner's WhatsApp number** — set in `.env` (not committed; `.env` is
+   gitignored). Currently set to `212623201547` (i.e. +212 623-201547, from
+   `PUBLIC_OWNER_WHATSAPP_NUMBER`, digits only, international format, no `+`;
+   see `.env.example` and `src/lib/config.ts`). Whoever deploys this needs to
+   set the same value in the hosting environment's env vars — it isn't baked
+   into the repo.
+2. **Owner's Instagram handle** — set in `.env` via
+   `PUBLIC_OWNER_INSTAGRAM_HANDLE`, currently `eco.kephyra`
+   (https://www.instagram.com/eco.kephyra/), used in the homepage Instagram
+   section's "Follow @..." link.
+3. **Real scooter data & photos** — scooters are seeded in
    `src/lib/server/db.ts` (name, model, price, description) with an emoji
    placeholder instead of a photo on the landing page. Either edit the seed
    data and re-run against a fresh DB, or add rows directly via SQLite
    (`sqlite3 data.sqlite3`) — there is no scooter-editing UI in v1, by design
    (see Admin shortcut below).
-3. **Domain & hosting** — not configured. The app is a standard Node
+4. **Domain & hosting** — not configured. The app is a standard Node
    SvelteKit app (`adapter-node`), deployable as-is to Fly.io/a VPS/Render/etc.,
    or swap the adapter for Vercel/Netlify if preferred. No domain-specific
    assumptions are baked in (OG/sitemap URLs are derived from the request
