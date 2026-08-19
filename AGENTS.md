@@ -1,17 +1,50 @@
 # Project agent memory
 
-This file is the project's committed home for project-intrinsic agent knowledge: build, test, release, architecture, and sharp-edge notes that should travel with the code.
+This file is the project's committed home for project-intrinsic agent knowledge: build, test, release, architecture, and current-state facts that should travel with the code. Written for a reader with zero memory of prior sessions — current state first, rationale only where it changes what you should do next.
 
-- Add durable project-specific notes here as they are discovered through real work.
-- Stack: SvelteKit (Svelte 5, TS) + `adapter-node` + better-sqlite3 + Tailwind v4. See README.md for why, how to run, and what's left before launch (owner WhatsApp number, real scooter data/photos, domain/hosting).
-- Booking is WhatsApp-only, no reservation form: every "Book" action is a `wa.me` link built by `src/lib/whatsapp.ts` (`waLink()`). See README's "Key behaviors" for which pages record a reservation vs. just open WhatsApp, and why.
-- `/admin` (HTTP Basic Auth via `ADMIN_PASSWORD`) is where the owner confirms/cancels reservations; there's still no UI for editing scooters themselves — manage the `scooters` table directly via `sqlite3 data.sqlite3` (intentional shortcut for a single-operator business — see README).
-- Double-booking prevention lives in `src/lib/server/db.ts` (`createReservationTxn`): overlap check + insert run inside one SQLite transaction, not as separate steps.
-- Owner's WhatsApp number is `PUBLIC_OWNER_WHATSAPP_NUMBER` (env, see `.env.example`), read in `src/lib/config.ts` — the only place that needs editing once the real number is known.
-- Design system (colors, fonts, `.btn`/`.whatsapp-float`/`.nav-link`/`.card-fb`/`.hero-fb`/`.insta-grid`/`.divider`/`.reveal` classes) lives in `src/lib/styles/app.css` via Tailwind v4 `@theme` + `@layer`, fetched CSS-value-for-value from the ebike-agadir-adventures.com reference site the captain chose. **Custom rules in this file must stay inside `@layer base`/`@layer components`** — un-layered CSS beats Tailwind's layered utility classes regardless of specificity, which previously broke `text-white` on the hero `<h1>` and the burger's `hidden` utility. Reference placeholder photos live in `static/images/` — swap for real scooter photos when available (see README item 2).
-- Scroll-reveal (`.reveal`/`.reveal.visible`, IntersectionObserver threshold 0.1 / rootMargin `0px 0px -50px 0px`, fires once) is a Svelte action at `src/lib/actions/reveal.ts` (`use:reveal`), reproducing the reference's `js/main.js` `initReveal()` mechanism.
-- Mobile nav (`.nav-mobile-panel` + backdrop) is nested **inside** `<header>` in `src/routes/+layout.svelte`, not a page-level sibling — this matches the reference's own `.nav-list` nesting. It's required for the burger (`z-index:105`) to render above the sliding panel (`z-index:101`): both need to share `<header>`'s own stacking context (`position:fixed` + `z-index:100`) so they're compared locally: a panel/backdrop placed as a sibling of `<header>` would form its own top-level stacking context and unconditionally cover the header (including the burger) once its z-index exceeds the header's, regardless of the burger's own z-index. `<header>` also has `backdrop-filter`, which makes it the containing block for its fixed-position descendants — the nested panel still positions/sizes correctly against the viewport because of how `top`/`right`/`100vh` resolve, but keep this in mind if the header's filter is ever removed.
-- Full i18n across 7 languages (EN/FR/NL/DE/ES/IT/AR) lives in `src/lib/i18n/`: `translations.ts` holds the per-language dictionary (typed against the `Translation` interface — adding a new UI string means adding it to that interface and to all 7 language entries), `store.svelte.ts` holds the reactive current-language `$state`, persisted to `localStorage` and initialized client-side from stored/browser language via `initLang()` (called once from `+layout.svelte`). Components read `currentTranslation()` reactively (typically `let t = $derived(currentTranslation())`) rather than hardcoding strings. Arabic flips `<html dir="rtl">` (set via an `$effect` in the layout) — matching RTL CSS overrides live at the bottom of `app.css`. WhatsApp message text is also localized via `translations.ts`'s `messages` builder functions, not hardcoded in components. SEO `<title>`/meta tags in `SeoHead.svelte` are **not** localized (deliberate scope limit — they're server-rendered before the client picks a language).
+## Current state, at a glance
+
+- Stack: SvelteKit (Svelte 5, TS) + `adapter-node` + better-sqlite3 + Tailwind v4.
+- Booking: WhatsApp-only via `wa.me` links (`src/lib/whatsapp.ts`). No `/reserve` form page. No WhatsApp Business API.
+- `/availability` page exists and works (calendar + date-picker booking flow) — reachable via the hero's "Check availability" button and a "how it works" link, not in the main nav.
+- Visual design matches ebike-agadir-adventures.com closely (palette, fonts, header/burger, floating WhatsApp button, section layout) — current palette/fonts unchanged as of this writing (a distinct-identity redesign was requested but explicitly deferred/skipped for now).
+- Homepage section order: Hero → Offers/Packages → How booking works → Why choose us (photo cards) → Reviews → FAQ (WhatsApp link at end too) → Instagram → closing CTA.
+- Pricing tiers: 1 Day = 200 MAD/day, 4-7 Days = 150 MAD/day, 11+ Days = 130 MAD/day (real numbers, captain-confirmed). No separate flat per-scooter daily rate is shown anywhere anymore.
+- Reviews section: links to Google + TripAdvisor via `PUBLIC_GOOGLE_REVIEW_URL` / `PUBLIC_TRIPADVISOR_URL`, both placeholder URLs — no ratings/review counts shown (neither listing exists yet).
+- Hero image, gallery/fleet images, and Why-choose-us photos are placeholders copied from the reference site — not real photos of this business. Hero swap point is the `HERO_IMAGE` constant in `src/lib/config.ts`.
+- i18n: 7 languages (EN/FR/NL/DE/ES/IT/AR) with real (not machine-approximate) translations, including WhatsApp message text; Arabic is RTL. Source: `src/lib/i18n/`.
+- `/admin` reads `ADMIN_PASSWORD` via `$env/dynamic/private` (fixed — previously used raw `process.env` at module load, which didn't reliably populate under `vite dev`; works correctly now under both `npm run dev` and `node build/index.js`).
+- Mobile RTL footer/nav alignment issues (bidi-reordered phone number/copyright line, hardcoded `text-align: left` on nav/lang-dropdown items) are fixed — see the RTL section below before touching header/footer/nav CSS again.
+
+## What this project is
+
+Single-operator e-scooter rental site for Tamraght/Taghazout, Morocco. Booking is WhatsApp-only (no reservation form). Visual design is deliberately modeled closely on https://ebike-agadir-adventures.com/ per explicit captain instruction, with filios-bike's own content/business identity.
+
+## What's real vs. placeholder right now
+
+(Check this section's claims against current files before trusting them — it's the part most likely to go stale.)
+
+- **Real**: owner WhatsApp number (`212623201547`) and Instagram handle (`eco.kephyra`), set in `.env` (gitignored — not in git history except appearing in one commit message from an earlier chat instruction; this repo has no public remote, so that's not a live exposure concern, but don't add more secrets to commit messages going forward).
+- **Placeholder**: scooter photos, hero image, why-choose-us photos, business logo (still the reference site's own logo asset), pricing-card scooter descriptions, Google/TripAdvisor review URLs.
+- **Real pricing**: the 3 duration tiers (200/150/130 MAD) are the actual numbers to use; nothing else on the pricing side is a placeholder.
+
+## Where things live
+
+- `src/lib/config.ts` — owner contact config (WhatsApp number, Instagram handle, review URLs, `HERO_IMAGE` swap constant).
+- `src/lib/i18n/` — all copy/translations (`translations.ts`) and the reactive language store (`store.svelte.ts`).
+- `src/lib/styles/app.css` — design tokens (colors/fonts/shadows) matching the reference site, all custom rules inside `@layer base`/`@layer components`, RTL overrides at the bottom of the file.
+- `src/hooks.server.ts` — `/admin` Basic Auth gate.
+- `README.md` — already has a "what still needs to be filled in before going live" section; keep that in sync rather than duplicating its contents here.
+
+## Sharp edges (read before touching these areas again)
+
+- **Tailwind layering**: custom rules in `app.css` must stay inside `@layer base`/`@layer components` — un-layered CSS beats Tailwind's layered utility classes regardless of specificity (previously broke `text-white` on the hero `<h1>` and the burger's `hidden` utility).
+- **Mobile nav stacking**: `.nav-mobile-panel` + backdrop are nested **inside** `<header>` in `+layout.svelte`, not a page-level sibling — required for the burger (`z-index:105`) to render above the sliding panel (`z-index:101`) by sharing `<header>`'s stacking context. A panel/backdrop placed as a header sibling would form its own top-level stacking context and cover the header regardless of the burger's z-index. `<header>`'s `backdrop-filter` makes it the containing block for fixed-position descendants — the nested panel still positions correctly against the viewport, but keep this in mind if the header's filter is ever removed.
+- **RTL**: use logical CSS properties (`text-align: start`, not `left`) for anything that must flip in Arabic — two real bugs were hardcoded `text-align: left` on `.nav-link` (mobile) and `.lang-option`. Mixed-direction text (phone numbers, `© year BusinessName`) needs `<bdi dir="ltr">` wrapping inside RTL paragraphs, or digit groups/word order visually reorder (real bug, not cosmetic) — see the footer in `+layout.svelte` for the pattern.
+- **i18n**: `Translation` interface in `translations.ts` is the source of truth — add a new UI string there first, then to all 7 language entries, or `svelte-check` will fail with missing-property errors pinpointing every call site.
+- **Scroll-reveal**: `.reveal`/`.reveal.visible` via IntersectionObserver (threshold 0.1, rootMargin `0px 0px -50px 0px`, fires once) is a Svelte action at `src/lib/actions/reveal.ts` (`use:reveal`).
+- **Double-booking prevention**: overlap check + insert run inside one SQLite transaction in `src/lib/server/db.ts` (`createReservationTxn`), not as separate steps.
+- **Env vars in SvelteKit**: read private server env through `$env/dynamic/private` (or `$env/static/private`), not raw `process.env` — the latter isn't reliably populated from `.env` under `vite dev`.
 
 ## Maintaining this file
 

@@ -47,13 +47,29 @@ defaults to 3000, and `DATABASE_PATH`).
    `PUBLIC_OWNER_INSTAGRAM_HANDLE`, currently `eco.kephyra`
    (https://www.instagram.com/eco.kephyra/), used in the homepage Instagram
    section's "Follow @..." link.
-3. **Real scooter data & photos** — scooters are seeded in
+3. **Google + TripAdvisor review links** — set in `.env` via
+   `PUBLIC_GOOGLE_REVIEW_URL` and `PUBLIC_TRIPADVISOR_URL`, currently
+   placeholder URLs (the business has no real listing on either platform
+   yet). Used by the homepage Reviews section's two buttons. The section
+   intentionally shows no star ratings/review counts since none exist —
+   swap in the real listing URLs once they exist and it's ready as-is.
+4. **Real scooter data & photos** — scooters are seeded in
    `src/lib/server/db.ts` (name, model, price, description) with an emoji
    placeholder instead of a photo on the landing page. Either edit the seed
    data and re-run against a fresh DB, or add rows directly via SQLite
    (`sqlite3 data.sqlite3`) — there is no scooter-editing UI in v1, by design
    (see Admin shortcut below).
-4. **Domain & hosting** — not configured. The app is a standard Node
+5. **Hero image** — currently the reference site's placeholder canyon photo.
+   Captain plans to supply a real brand image/logo + caption. Swap path is
+   a single constant: `HERO_IMAGE` in `src/lib/config.ts` (points at a file
+   in `static/images/`); the caption text lives in the hero section of
+   `src/routes/+page.svelte` (and its translations in
+   `src/lib/i18n/translations.ts`) if that also needs changing.
+6. **Why-choose-us section photos/copy** — currently placeholder fleet
+   photos and generic copy (`why_choose_us` in
+   `src/lib/i18n/translations.ts`, images in `+page.svelte`'s
+   `whyChooseUsImages`). Captain will supply real photos and caption text.
+7. **Domain & hosting** — not configured. The app is a standard Node
    SvelteKit app (`adapter-node`), deployable as-is to Fly.io/a VPS/Render/etc.,
    or swap the adapter for Vercel/Netlify if preferred. No domain-specific
    assumptions are baked in (OG/sitemap URLs are derived from the request
@@ -63,10 +79,13 @@ defaults to 3000, and `DATABASE_PATH`).
 
 Reservations have a workflow: every booking starts as `pending`. The owner
 reviews and confirms (or cancels) it at **`/admin`**, protected by HTTP Basic
-Auth — username `admin`, password from the `ADMIN_PASSWORD` env var. The
-admin page returns 503 if `ADMIN_PASSWORD` isn't set, and 401 until you
-authenticate. Cancelling a reservation frees its dates back up (cancelled
-reservations don't block new bookings or show as busy on `/availability`).
+Auth — username `admin`, password from the `ADMIN_PASSWORD` env var
+(`src/hooks.server.ts` reads it via `$env/dynamic/private`, not raw
+`process.env`, so it loads correctly under both `npm run dev` and
+`node build/index.js`). The admin page returns 503 if `ADMIN_PASSWORD` isn't
+set, and 401 until you authenticate. Cancelling a reservation frees its dates
+back up (cancelled reservations don't block new bookings or show as busy on
+`/availability`).
 
 There is still no UI for editing scooters themselves — manage the `scooters`
 table directly via SQLite (`sqlite3 data.sqlite3`). This is an intentional
@@ -103,3 +122,7 @@ fleet or reservation volume grows.
   text. The chosen language persists in `localStorage`. Page `<title>`/meta
   tags stay English-only (they're server-rendered before the client picks a
   language) — see `src/lib/i18n/translations.ts` to add or edit copy.
+- **Reviews section**: homepage section linking out to Google and TripAdvisor
+  (`PUBLIC_GOOGLE_REVIEW_URL` / `PUBLIC_TRIPADVISOR_URL`) — deliberately shows
+  no ratings/review counts since neither listing exists yet; don't add
+  fabricated numbers here later without a real listing to back them.

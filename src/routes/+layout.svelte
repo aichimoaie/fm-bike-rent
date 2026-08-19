@@ -33,7 +33,7 @@
 		{ href: '/', label: t.nav.home },
 		{ href: '/#fleet', label: t.nav.packages },
 		{ href: '/#how-it-works', label: t.nav.how_it_works },
-		{ href: '/#pricing', label: t.nav.pricing },
+		{ href: '/#reviews', label: t.nav.reviews },
 		{ href: '/#faq', label: t.nav.faq },
 		{ href: '/#contact', label: t.nav.contact }
 	]);
@@ -170,7 +170,7 @@
 				<ul class="mt-5 space-y-2 text-sm text-white/80">
 					<li><a href="/" class="hover:text-(--color-orange)">{t.nav.home}</a></li>
 					<li><a href="/#fleet" class="hover:text-(--color-orange)">{t.nav.packages}</a></li>
-					<li><a href="/#pricing" class="hover:text-(--color-orange)">{t.nav.pricing}</a></li>
+					<li><a href="/#reviews" class="hover:text-(--color-orange)">{t.nav.reviews}</a></li>
 				</ul>
 			</div>
 			<div>
@@ -190,7 +190,7 @@
 							rel="noopener"
 							class="hover:text-(--color-orange)"
 						>
-							📱 {formatPhoneDisplay(OWNER_WHATSAPP_NUMBER)}
+							📱 <bdi dir="ltr">{formatPhoneDisplay(OWNER_WHATSAPP_NUMBER)}</bdi>
 						</a>
 					</li>
 					<li>📍 {t.footer.location}</li>
@@ -199,7 +199,7 @@
 		</div>
 		<div class="border-t border-white/10 py-6 text-center text-[0.82rem] text-white/70">
 			<div class="container-fb">
-				&copy; {new Date().getFullYear()} {BUSINESS_NAME}. {t.footer.rights}
+				<bdi dir="ltr">&copy; {new Date().getFullYear()} {BUSINESS_NAME}.</bdi> {t.footer.rights}
 			</div>
 		</div>
 	</footer>

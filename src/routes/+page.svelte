@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SeoHead from '$lib/components/SeoHead.svelte';
-	import { BUSINESS_NAME, OWNER_INSTAGRAM_HANDLE } from '$lib/config';
+	import { BUSINESS_NAME, OWNER_INSTAGRAM_HANDLE, GOOGLE_REVIEW_URL, TRIPADVISOR_URL, HERO_IMAGE } from '$lib/config';
 	import { waLink } from '$lib/whatsapp';
 	import { reveal } from '$lib/actions/reveal';
 	import { currentTranslation } from '$lib/i18n/store.svelte';
@@ -17,7 +17,8 @@
 		'/images/rockrider-e-expl-500s-lifestyle.jpg'
 	];
 
-	const pricePerDay = [150, 130, 110];
+	// Real pricing, captain-confirmed: 1 day 200 MAD, 4-7 days 150 MAD, 11+ days 130 MAD.
+	const pricePerDay = [200, 150, 130];
 
 	let packages = $derived(
 		t.packages.tiers.map((tier, i) => ({
@@ -27,6 +28,13 @@
 			popular: i === 1
 		}))
 	);
+
+	const whyChooseUsImages = [
+		'/images/fleet-bike-sunset-atlas.jpg',
+		'/images/rockrider-e-expl-500s-lifestyle.jpg',
+		'/images/fleet-bike-sunset-sky.jpg',
+		'/images/berber-village.jpg'
+	];
 
 	const galleryImages = [
 		'/images/gallery-argan-trail.jpg',
@@ -43,7 +51,7 @@
 	description="Electric scooter rental in Tamraght and Taghazout, Morocco. Easy WhatsApp booking, flexible dates. Rent a scooter for surf trips, beach rides and town runs."
 />
 
-<section class="hero-fb" style="background-image: url('/images/hero-canyon.jpg');">
+<section class="hero-fb" style="background-image: url('{HERO_IMAGE}');">
 	<div class="hero-fb-content">
 		<p class="text-sm font-semibold tracking-widest uppercase">{t.hero.location}</p>
 		<h1 class="mx-auto mt-4 max-w-3xl text-4xl sm:text-6xl">
@@ -68,27 +76,8 @@
 	<div class="hero-fb-scroll">{t.hero.scroll}</div>
 </section>
 
-<section class="section-fb bg-white">
-	<div class="container-fb">
-		<div class="mx-auto max-w-[750px] text-center" use:reveal>
-			<p class="section-tag">{t.features.tag}</p>
-			<h2 class="mt-4 text-3xl">{t.features.heading}</h2>
-			<div class="divider"></div>
-		</div>
-		<div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-			{#each t.features.items as item, i (i)}
-				{@const icons = ['📍', '🛵', '📅', '💬']}
-				<div class="feature-fb" use:reveal>
-					<div class="feature-fb-icon">{icons[i]}</div>
-					<h3 class="text-base">{item.title}</h3>
-					<p class="mt-2 text-sm text-(--color-gray)">{item.desc}</p>
-				</div>
-			{/each}
-		</div>
-	</div>
-</section>
-
-<section id="fleet" class="section-fb bg-(--color-beige-dark)">
+<!-- Offers / Packages: right after the hero, per captain's requested order. -->
+<section id="fleet" class="section-fb bg-white">
 	<div class="container-fb">
 		<div class="mx-auto max-w-[750px] text-center" use:reveal>
 			<p class="section-tag">{t.packages.tag}</p>
@@ -132,10 +121,22 @@
 			<a href="/availability" class="underline">{t.common.live_availability}</a>
 			{t.packages.footnote_post}
 		</p>
+
+		<div class="mt-8 text-center" use:reveal>
+			<a
+				href={waLink(t.messages.generic(BUSINESS_NAME))}
+				target="_blank"
+				rel="noopener"
+				class="btn btn-whatsapp btn-lg"
+			>
+				<span>💬</span>
+				<span>{t.common.book_whatsapp}</span>
+			</a>
+		</div>
 	</div>
 </section>
 
-<section id="how-it-works" class="section-fb bg-white">
+<section id="how-it-works" class="section-fb bg-(--color-beige-dark)">
 	<div class="container-fb">
 		<div class="mx-auto max-w-[750px] text-center" use:reveal>
 			<p class="section-tag">{t.how_it_works.tag}</p>
@@ -182,39 +183,66 @@
 	</div>
 </section>
 
-<section id="pricing" class="section-fb bg-(--color-beige-dark) text-center">
+<!-- Why choose us: photo-led, moved below Offers + How it works per captain's request.
+     Placeholder photos/copy — captain will supply real photos + captions to swap in. -->
+<section class="section-fb bg-white">
 	<div class="container-fb">
-		<div class="mx-auto max-w-[750px]" use:reveal>
-			<p class="section-tag">{t.pricing.tag}</p>
-			<h2 class="mt-4 text-3xl">{t.pricing.heading}</h2>
+		<div class="mx-auto max-w-[750px] text-center" use:reveal>
+			<p class="section-tag">{t.why_choose_us.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.why_choose_us.heading}</h2>
 			<div class="divider"></div>
-			<p class="mt-4 text-(--color-gray)">{t.pricing.subtitle}</p>
+			<p class="mt-4 text-(--color-gray)">{t.why_choose_us.intro}</p>
 		</div>
-		<div class="mx-auto mt-10 grid max-w-4xl gap-6 sm:grid-cols-2">
-			<div class="card-fb p-8 text-left" use:reveal>
-				<p class="text-sm font-semibold text-(--color-orange-dark)">{t.pricing.cards[0].name}</p>
-				<p class="card-fb-price mt-2 text-4xl">150 MAD</p>
-				<p class="text-sm text-(--color-gray)">{t.pricing.per_day}</p>
-				<p class="mt-4 text-sm text-(--color-gray)">{t.pricing.cards[0].desc}</p>
-			</div>
-			<div class="card-fb p-8 text-left" use:reveal>
-				<p class="text-sm font-semibold text-(--color-orange-dark)">{t.pricing.cards[1].name}</p>
-				<p class="card-fb-price mt-2 text-4xl">200 MAD</p>
-				<p class="text-sm text-(--color-gray)">{t.pricing.per_day}</p>
-				<p class="mt-4 text-sm text-(--color-gray)">{t.pricing.cards[1].desc}</p>
-			</div>
+		<div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+			{#each t.why_choose_us.items as item, i (i)}
+				<div class="card-fb" use:reveal>
+					<div class="card-fb-image">
+						<img src={whyChooseUsImages[i]} alt={item.title} />
+					</div>
+					<div class="card-fb-body">
+						<h3 class="text-base font-semibold text-(--color-green)">{item.title}</h3>
+						<p class="mt-2 text-sm text-(--color-gray)">{item.desc}</p>
+					</div>
+				</div>
+			{/each}
+		</div>
+	</div>
+</section>
+
+<!-- Reviews: honest prompt only, no fabricated ratings/counts — the business has no
+     real Google/TripAdvisor listing yet, these link out to placeholder URLs (see
+     GOOGLE_REVIEW_URL / TRIPADVISOR_URL in src/lib/config.ts). -->
+<section id="reviews" class="section-fb bg-(--color-beige-dark)">
+	<div class="container-fb text-center">
+		<div class="mx-auto max-w-[750px]" use:reveal>
+			<p class="section-tag">{t.reviews.tag}</p>
+			<h2 class="mt-4 text-3xl">{t.reviews.heading}</h2>
+			<div class="divider"></div>
+			<p class="mt-4 text-(--color-gray)">{t.reviews.subtitle}</p>
+		</div>
+		<div class="mx-auto mt-14 grid max-w-2xl gap-6 sm:grid-cols-2">
+			<a href={GOOGLE_REVIEW_URL} target="_blank" rel="noopener" class="review-card" use:reveal>
+				<div class="review-icon review-icon-google">
+					<span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span>
+				</div>
+				<span class="font-semibold text-(--color-green)">{t.reviews.google}</span>
+			</a>
+			<a href={TRIPADVISOR_URL} target="_blank" rel="noopener" class="review-card" use:reveal>
+				<div class="review-icon review-icon-tripadvisor">🦉</div>
+				<span class="font-semibold text-(--color-green)">{t.reviews.tripadvisor}</span>
+			</a>
 		</div>
 	</div>
 </section>
 
 <section id="faq" class="section-fb bg-white">
-	<div class="container-fb max-w-3xl">
-		<div class="text-center" use:reveal>
+	<div class="container-fb max-w-3xl text-center">
+		<div use:reveal>
 			<p class="section-tag">{t.faq.tag}</p>
 			<h2 class="mt-4 text-3xl">{t.faq.heading}</h2>
 			<div class="divider"></div>
 		</div>
-		<dl class="mt-12 space-y-8" use:reveal>
+		<dl class="mt-12 space-y-8 text-start" use:reveal>
 			{#each t.faq.items as faq, i (i)}
 				<div class="border-b border-(--color-light-gray) pb-8">
 					<dt class="font-semibold text-(--color-green)">{faq.q}</dt>
@@ -222,6 +250,18 @@
 				</div>
 			{/each}
 		</dl>
+		<div class="mt-10" use:reveal>
+			<p class="mb-4 text-sm text-(--color-gray)">{t.faq.cta}</p>
+			<a
+				href={waLink(t.messages.generic(BUSINESS_NAME))}
+				target="_blank"
+				rel="noopener"
+				class="btn btn-whatsapp"
+			>
+				<span>💬</span>
+				<span>{t.common.book_whatsapp}</span>
+			</a>
+		</div>
 	</div>
 </section>
 

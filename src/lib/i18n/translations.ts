@@ -6,7 +6,7 @@ export interface Translation {
 		home: string;
 		packages: string;
 		how_it_works: string;
-		pricing: string;
+		reviews: string;
 		faq: string;
 		contact: string;
 	};
@@ -31,11 +31,6 @@ export interface Translation {
 		subtitle: string;
 		scroll: string;
 	};
-	features: {
-		tag: string;
-		heading: string;
-		items: { title: string; desc: string }[];
-	};
 	packages: {
 		tag: string;
 		heading: string;
@@ -52,17 +47,24 @@ export interface Translation {
 		step1_pre: string;
 		step1_post: string;
 	};
-	pricing: {
+	why_choose_us: {
+		tag: string;
+		heading: string;
+		intro: string;
+		items: { title: string; desc: string }[];
+	};
+	reviews: {
 		tag: string;
 		heading: string;
 		subtitle: string;
-		per_day: string;
-		cards: { name: string; desc: string }[];
+		google: string;
+		tripadvisor: string;
 	};
 	faq: {
 		tag: string;
 		heading: string;
 		items: { q: string; a: string }[];
+		cta: string;
 	};
 	instagram: {
 		tag: string;
@@ -115,7 +117,7 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 			home: 'Home',
 			packages: 'Packages',
 			how_it_works: 'How it works',
-			pricing: 'Pricing',
+			reviews: 'Reviews',
 			faq: 'FAQ',
 			contact: 'Contact'
 		},
@@ -141,26 +143,16 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				"Fast, easy e-scooter rental for surf trips, beach cruising and getting around town. Message us on WhatsApp and we'll confirm your dates — just like booking with a friend.",
 			scroll: 'Scroll'
 		},
-		features: {
-			tag: 'Why book with us',
-			heading: 'Easy, local, no-hassle rental',
-			items: [
-				{ title: 'Local pickup', desc: 'Pickup in Tamraght, minutes from Taghazout.' },
-				{ title: 'Well-maintained scooters', desc: 'Electric, comfortable, ready for coast and town rides.' },
-				{ title: 'Flexible dates', desc: 'Check live availability and book the dates you need.' },
-				{ title: 'WhatsApp support', desc: 'Questions before or during your rental? Message us directly.' }
-			]
-		},
 		packages: {
-			tag: 'Packages',
+			tag: 'Offers',
 			heading: 'Rental packages',
 			subtitle: 'The longer you ride, the less you pay per day.',
 			popular: 'Most popular',
 			tiers: [
 				{
-					label: '1-3 Days',
+					label: '1 Day',
 					tag: 'Short trip',
-					desc: 'Perfect for a quick surf trip or a long weekend cruising the coast.'
+					desc: 'Perfect for a quick surf session or a single day exploring the coast.'
 				},
 				{
 					label: '4-7 Days',
@@ -187,15 +179,23 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				{ title: 'Confirm & ride', desc: 'We confirm your dates and pickup details directly over WhatsApp.' }
 			]
 		},
-		pricing: {
-			tag: 'Pricing',
-			heading: 'Simple daily rates',
-			subtitle: 'No hidden fees.',
-			per_day: 'per day',
-			cards: [
-				{ name: 'City Cruiser', desc: 'Comfortable and light — ideal for beach-to-town rides.' },
-				{ name: 'Long Range', desc: 'Bigger battery for longer surf-spot-hopping days.' }
+		why_choose_us: {
+			tag: 'Why choose us',
+			heading: 'Why choose us',
+			intro: 'A small, local operation that makes renting a scooter simple.',
+			items: [
+				{ title: 'Local pickup', desc: 'Pickup in Tamraght, minutes from Taghazout.' },
+				{ title: 'Well-maintained scooters', desc: 'Electric, comfortable, ready for coast and town rides.' },
+				{ title: 'Flexible dates', desc: 'Check live availability and book the dates you need.' },
+				{ title: 'WhatsApp support', desc: 'Questions before or during your rental? Message us directly.' }
 			]
+		},
+		reviews: {
+			tag: 'Reviews',
+			heading: 'Enjoyed your ride?',
+			subtitle: "Let others know — a review helps other travelers find us, and it really helps our small business.",
+			google: 'Review us on Google',
+			tripadvisor: 'Review us on TripAdvisor'
 		},
 		faq: {
 			tag: 'FAQ',
@@ -214,7 +214,8 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 					q: 'How do I confirm a reservation?',
 					a: 'Tap any "Book on WhatsApp" button — it opens a WhatsApp chat with your request pre-filled, and we confirm from there.'
 				}
-			]
+			],
+			cta: 'Still have questions? Message us on WhatsApp.'
 		},
 		instagram: {
 			tag: 'Instagram',
@@ -259,7 +260,7 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 			home: 'Accueil',
 			packages: 'Forfaits',
 			how_it_works: 'Comment ça marche',
-			pricing: 'Tarifs',
+			reviews: 'Avis',
 			faq: 'FAQ',
 			contact: 'Contact'
 		},
@@ -285,26 +286,16 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				'Location de scooter électrique rapide et simple pour le surf, la plage ou vos déplacements en ville. Écrivez-nous sur WhatsApp et nous confirmons vos dates — comme entre amis.',
 			scroll: 'Défiler'
 		},
-		features: {
-			tag: 'Pourquoi nous choisir',
-			heading: 'Une location simple et locale',
-			items: [
-				{ title: 'Retrait local', desc: 'Retrait à Tamraght, à quelques minutes de Taghazout.' },
-				{ title: 'Scooters bien entretenus', desc: 'Électriques, confortables, prêts pour la côte et la ville.' },
-				{ title: 'Dates flexibles', desc: 'Consultez les disponibilités en direct et réservez vos dates.' },
-				{ title: 'Assistance WhatsApp', desc: 'Une question avant ou pendant la location ? Écrivez-nous directement.' }
-			]
-		},
 		packages: {
-			tag: 'Forfaits',
+			tag: 'Offres',
 			heading: 'Forfaits de location',
 			subtitle: 'Plus vous roulez longtemps, moins vous payez par jour.',
 			popular: 'Le plus populaire',
 			tiers: [
 				{
-					label: '1-3 Jours',
+					label: '1 Jour',
 					tag: 'Court séjour',
-					desc: 'Idéal pour une session de surf rapide ou un long week-end sur la côte.'
+					desc: 'Idéal pour une session de surf rapide ou une journée sur la côte.'
 				},
 				{
 					label: '4-7 Jours',
@@ -331,15 +322,23 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				{ title: 'Confirmez et roulez', desc: 'Nous confirmons vos dates et le lieu de retrait directement sur WhatsApp.' }
 			]
 		},
-		pricing: {
-			tag: 'Tarifs',
-			heading: 'Tarifs journaliers simples',
-			subtitle: 'Sans frais cachés.',
-			per_day: 'par jour',
-			cards: [
-				{ name: 'City Cruiser', desc: 'Confortable et léger — idéal pour les trajets plage-ville.' },
-				{ name: 'Long Range', desc: 'Plus grande batterie pour enchaîner les spots de surf.' }
+		why_choose_us: {
+			tag: 'Pourquoi nous choisir',
+			heading: 'Pourquoi nous choisir',
+			intro: 'Une petite structure locale qui simplifie la location de scooter.',
+			items: [
+				{ title: 'Retrait local', desc: 'Retrait à Tamraght, à quelques minutes de Taghazout.' },
+				{ title: 'Scooters bien entretenus', desc: 'Électriques, confortables, prêts pour la côte et la ville.' },
+				{ title: 'Dates flexibles', desc: 'Consultez les disponibilités en direct et réservez vos dates.' },
+				{ title: 'Assistance WhatsApp', desc: 'Une question avant ou pendant la location ? Écrivez-nous directement.' }
 			]
+		},
+		reviews: {
+			tag: 'Avis',
+			heading: 'Vous avez aimé votre balade ?',
+			subtitle: 'Dites-le aux autres — un avis aide les voyageurs à nous trouver, et ça compte beaucoup pour notre petite entreprise.',
+			google: 'Laissez un avis sur Google',
+			tripadvisor: 'Laissez un avis sur TripAdvisor'
 		},
 		faq: {
 			tag: 'FAQ',
@@ -358,7 +357,8 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 					q: 'Comment confirmer une réservation ?',
 					a: 'Appuyez sur un bouton « Réserver sur WhatsApp » — un chat WhatsApp s\'ouvre avec votre demande pré-remplie, et nous confirmons ensuite.'
 				}
-			]
+			],
+			cta: 'Encore des questions ? Écrivez-nous sur WhatsApp.'
 		},
 		instagram: {
 			tag: 'Instagram',
@@ -403,7 +403,7 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 			home: 'Home',
 			packages: 'Pakketten',
 			how_it_works: 'Hoe het werkt',
-			pricing: 'Prijzen',
+			reviews: 'Recensies',
 			faq: 'FAQ',
 			contact: 'Contact'
 		},
@@ -429,26 +429,16 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				'Snelle, eenvoudige scooterverhuur voor surftrips, strandritjes en verplaatsingen in de stad. Stuur ons een bericht op WhatsApp en we bevestigen je data — net als bij een vriend boeken.',
 			scroll: 'Scroll'
 		},
-		features: {
-			tag: 'Waarom bij ons boeken',
-			heading: 'Eenvoudig, lokaal, zonder gedoe',
-			items: [
-				{ title: 'Lokaal ophalen', desc: 'Ophalen in Tamraght, enkele minuten van Taghazout.' },
-				{ title: 'Goed onderhouden scooters', desc: 'Elektrisch, comfortabel, klaar voor kust en stad.' },
-				{ title: 'Flexibele data', desc: 'Bekijk de actuele beschikbaarheid en boek je data.' },
-				{ title: 'WhatsApp-ondersteuning', desc: 'Vragen voor of tijdens je huurperiode? Stuur ons direct een bericht.' }
-			]
-		},
 		packages: {
-			tag: 'Pakketten',
+			tag: 'Aanbiedingen',
 			heading: 'Huurpakketten',
 			subtitle: 'Hoe langer je rijdt, hoe minder je per dag betaalt.',
 			popular: 'Meest gekozen',
 			tiers: [
 				{
-					label: '1-3 Dagen',
+					label: '1 Dag',
 					tag: 'Korte trip',
-					desc: 'Perfect voor een korte surftrip of een lang weekend aan de kust.'
+					desc: 'Perfect voor een korte surfsessie of een dagje langs de kust.'
 				},
 				{
 					label: '4-7 Dagen',
@@ -475,15 +465,23 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				{ title: 'Bevestig & rijd', desc: 'We bevestigen je data en ophaaldetails rechtstreeks via WhatsApp.' }
 			]
 		},
-		pricing: {
-			tag: 'Prijzen',
-			heading: 'Eenvoudige dagtarieven',
-			subtitle: 'Geen verborgen kosten.',
-			per_day: 'per dag',
-			cards: [
-				{ name: 'City Cruiser', desc: 'Comfortabel en licht — ideaal voor ritjes tussen strand en stad.' },
-				{ name: 'Long Range', desc: 'Grotere accu voor langere dagen langs de surfspots.' }
+		why_choose_us: {
+			tag: 'Waarom wij',
+			heading: 'Waarom bij ons boeken',
+			intro: 'Een kleine, lokale verhuur die het huren van een scooter simpel maakt.',
+			items: [
+				{ title: 'Lokaal ophalen', desc: 'Ophalen in Tamraght, enkele minuten van Taghazout.' },
+				{ title: 'Goed onderhouden scooters', desc: 'Elektrisch, comfortabel, klaar voor kust en stad.' },
+				{ title: 'Flexibele data', desc: 'Bekijk de actuele beschikbaarheid en boek je data.' },
+				{ title: 'WhatsApp-ondersteuning', desc: 'Vragen voor of tijdens je huurperiode? Stuur ons direct een bericht.' }
 			]
+		},
+		reviews: {
+			tag: 'Recensies',
+			heading: 'Genoten van je rit?',
+			subtitle: 'Laat het anderen weten — een recensie helpt andere reizigers ons te vinden, en betekent veel voor onze kleine onderneming.',
+			google: 'Beoordeel ons op Google',
+			tripadvisor: 'Beoordeel ons op TripAdvisor'
 		},
 		faq: {
 			tag: 'FAQ',
@@ -502,7 +500,8 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 					q: 'Hoe bevestig ik een boeking?',
 					a: 'Tik op een "Boek via WhatsApp"-knop — er opent een WhatsApp-chat met je verzoek al ingevuld, en wij bevestigen van daaruit.'
 				}
-			]
+			],
+			cta: 'Nog vragen? Stuur ons een bericht op WhatsApp.'
 		},
 		instagram: {
 			tag: 'Instagram',
@@ -547,7 +546,7 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 			home: 'Start',
 			packages: 'Pakete',
 			how_it_works: 'So geht\'s',
-			pricing: 'Preise',
+			reviews: 'Bewertungen',
 			faq: 'FAQ',
 			contact: 'Kontakt'
 		},
@@ -573,26 +572,16 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				'Schnelle, unkomplizierte E-Scooter-Vermietung für Surftrips, Strandfahrten und Fahrten in die Stadt. Schreib uns auf WhatsApp und wir bestätigen deine Termine — wie unter Freunden.',
 			scroll: 'Scrollen'
 		},
-		features: {
-			tag: 'Warum bei uns buchen',
-			heading: 'Einfach, lokal, unkompliziert',
-			items: [
-				{ title: 'Lokale Abholung', desc: 'Abholung in Tamraght, wenige Minuten von Taghazout entfernt.' },
-				{ title: 'Gepflegte Scooter', desc: 'Elektrisch, komfortabel, bereit für Küste und Stadt.' },
-				{ title: 'Flexible Termine', desc: 'Aktuelle Verfügbarkeit prüfen und deine Termine buchen.' },
-				{ title: 'WhatsApp-Support', desc: 'Fragen vor oder während der Miete? Schreib uns direkt.' }
-			]
-		},
 		packages: {
-			tag: 'Pakete',
+			tag: 'Angebote',
 			heading: 'Mietpakete',
 			subtitle: 'Je länger du fährst, desto weniger zahlst du pro Tag.',
 			popular: 'Am beliebtesten',
 			tiers: [
 				{
-					label: '1-3 Tage',
+					label: '1 Tag',
 					tag: 'Kurztrip',
-					desc: 'Perfekt für einen kurzen Surftrip oder ein langes Wochenende an der Küste.'
+					desc: 'Perfekt für eine kurze Surfsession oder einen Tag an der Küste.'
 				},
 				{
 					label: '4-7 Tage',
@@ -619,15 +608,23 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				{ title: 'Bestätigen & losfahren', desc: 'Wir bestätigen deine Termine und Abholdetails direkt über WhatsApp.' }
 			]
 		},
-		pricing: {
-			tag: 'Preise',
-			heading: 'Einfache Tagespreise',
-			subtitle: 'Keine versteckten Kosten.',
-			per_day: 'pro Tag',
-			cards: [
-				{ name: 'City Cruiser', desc: 'Komfortabel und leicht — ideal für Fahrten zwischen Strand und Stadt.' },
-				{ name: 'Long Range', desc: 'Größerer Akku für längere Tage von Surfspot zu Surfspot.' }
+		why_choose_us: {
+			tag: 'Warum wir',
+			heading: 'Warum bei uns buchen',
+			intro: 'Ein kleiner, lokaler Anbieter, der das Mieten eines Scooters einfach macht.',
+			items: [
+				{ title: 'Lokale Abholung', desc: 'Abholung in Tamraght, wenige Minuten von Taghazout entfernt.' },
+				{ title: 'Gepflegte Scooter', desc: 'Elektrisch, komfortabel, bereit für Küste und Stadt.' },
+				{ title: 'Flexible Termine', desc: 'Aktuelle Verfügbarkeit prüfen und deine Termine buchen.' },
+				{ title: 'WhatsApp-Support', desc: 'Fragen vor oder während der Miete? Schreib uns direkt.' }
 			]
+		},
+		reviews: {
+			tag: 'Bewertungen',
+			heading: 'Hat es dir gefallen?',
+			subtitle: 'Lass es andere wissen — eine Bewertung hilft anderen Reisenden, uns zu finden, und bedeutet viel für unser kleines Unternehmen.',
+			google: 'Bewerte uns auf Google',
+			tripadvisor: 'Bewerte uns auf TripAdvisor'
 		},
 		faq: {
 			tag: 'FAQ',
@@ -646,7 +643,8 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 					q: 'Wie bestätige ich eine Buchung?',
 					a: 'Tippe auf einen „Per WhatsApp buchen“-Button — ein WhatsApp-Chat mit deiner vorausgefüllten Anfrage öffnet sich, und wir bestätigen von dort aus.'
 				}
-			]
+			],
+			cta: 'Noch Fragen? Schreib uns auf WhatsApp.'
 		},
 		instagram: {
 			tag: 'Instagram',
@@ -691,7 +689,7 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 			home: 'Inicio',
 			packages: 'Paquetes',
 			how_it_works: 'Cómo funciona',
-			pricing: 'Precios',
+			reviews: 'Opiniones',
 			faq: 'FAQ',
 			contact: 'Contacto'
 		},
@@ -717,26 +715,16 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				'Alquiler de scooter eléctrico rápido y sencillo para surfear, ir a la playa o moverte por la ciudad. Escríbenos por WhatsApp y confirmamos tus fechas — como si reservaras con un amigo.',
 			scroll: 'Desplázate'
 		},
-		features: {
-			tag: 'Por qué elegirnos',
-			heading: 'Alquiler fácil y local, sin complicaciones',
-			items: [
-				{ title: 'Recogida local', desc: 'Recogida en Tamraght, a pocos minutos de Taghazout.' },
-				{ title: 'Scooters bien cuidados', desc: 'Eléctricos, cómodos, listos para la costa y la ciudad.' },
-				{ title: 'Fechas flexibles', desc: 'Consulta la disponibilidad en vivo y reserva tus fechas.' },
-				{ title: 'Soporte por WhatsApp', desc: '¿Dudas antes o durante el alquiler? Escríbenos directamente.' }
-			]
-		},
 		packages: {
-			tag: 'Paquetes',
+			tag: 'Ofertas',
 			heading: 'Paquetes de alquiler',
 			subtitle: 'Cuanto más tiempo alquiles, menos pagas por día.',
 			popular: 'Más popular',
 			tiers: [
 				{
-					label: '1-3 Días',
+					label: '1 Día',
 					tag: 'Viaje corto',
-					desc: 'Perfecto para un viaje de surf rápido o un largo fin de semana en la costa.'
+					desc: 'Perfecto para una sesión de surf rápida o un día explorando la costa.'
 				},
 				{
 					label: '4-7 Días',
@@ -763,15 +751,23 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				{ title: 'Confirma y disfruta', desc: 'Confirmamos tus fechas y los detalles de recogida directamente por WhatsApp.' }
 			]
 		},
-		pricing: {
-			tag: 'Precios',
-			heading: 'Tarifas diarias sencillas',
-			subtitle: 'Sin costes ocultos.',
-			per_day: 'por día',
-			cards: [
-				{ name: 'City Cruiser', desc: 'Cómodo y ligero — ideal para trayectos entre la playa y la ciudad.' },
-				{ name: 'Long Range', desc: 'Batería más grande para días largos recorriendo spots de surf.' }
+		why_choose_us: {
+			tag: 'Por qué elegirnos',
+			heading: 'Por qué elegirnos',
+			intro: 'Un negocio local y pequeño que hace que alquilar un scooter sea muy sencillo.',
+			items: [
+				{ title: 'Recogida local', desc: 'Recogida en Tamraght, a pocos minutos de Taghazout.' },
+				{ title: 'Scooters bien cuidados', desc: 'Eléctricos, cómodos, listos para la costa y la ciudad.' },
+				{ title: 'Fechas flexibles', desc: 'Consulta la disponibilidad en vivo y reserva tus fechas.' },
+				{ title: 'Soporte por WhatsApp', desc: '¿Dudas antes o durante el alquiler? Escríbenos directamente.' }
 			]
+		},
+		reviews: {
+			tag: 'Opiniones',
+			heading: '¿Te ha gustado el paseo?',
+			subtitle: 'Cuéntaselo a otros — una reseña ayuda a otros viajeros a encontrarnos, y significa mucho para nuestro pequeño negocio.',
+			google: 'Déjanos una reseña en Google',
+			tripadvisor: 'Déjanos una reseña en TripAdvisor'
 		},
 		faq: {
 			tag: 'FAQ',
@@ -790,7 +786,8 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 					q: '¿Cómo confirmo una reserva?',
 					a: 'Toca cualquier botón "Reservar por WhatsApp" — se abrirá un chat de WhatsApp con tu solicitud ya rellenada, y confirmamos desde ahí.'
 				}
-			]
+			],
+			cta: '¿Aún tienes dudas? Escríbenos por WhatsApp.'
 		},
 		instagram: {
 			tag: 'Instagram',
@@ -835,7 +832,7 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 			home: 'Home',
 			packages: 'Pacchetti',
 			how_it_works: 'Come funziona',
-			pricing: 'Prezzi',
+			reviews: 'Recensioni',
 			faq: 'FAQ',
 			contact: 'Contatti'
 		},
@@ -861,26 +858,16 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				'Noleggio scooter elettrico veloce e semplice per il surf, la spiaggia o gli spostamenti in città. Scrivici su WhatsApp e confermiamo le tue date — come tra amici.',
 			scroll: 'Scorri'
 		},
-		features: {
-			tag: 'Perché sceglierci',
-			heading: 'Noleggio semplice e locale, senza pensieri',
-			items: [
-				{ title: 'Ritiro locale', desc: 'Ritiro a Tamraght, a pochi minuti da Taghazout.' },
-				{ title: 'Scooter ben tenuti', desc: 'Elettrici, comodi, pronti per costa e città.' },
-				{ title: 'Date flessibili', desc: 'Controlla la disponibilità in tempo reale e prenota le tue date.' },
-				{ title: 'Assistenza su WhatsApp', desc: 'Domande prima o durante il noleggio? Scrivici direttamente.' }
-			]
-		},
 		packages: {
-			tag: 'Pacchetti',
+			tag: 'Offerte',
 			heading: 'Pacchetti di noleggio',
 			subtitle: 'Più giorni noleggi, meno paghi al giorno.',
 			popular: 'Più richiesto',
 			tiers: [
 				{
-					label: '1-3 Giorni',
+					label: '1 Giorno',
 					tag: 'Viaggio breve',
-					desc: 'Perfetto per una rapida sessione di surf o un lungo weekend sulla costa.'
+					desc: 'Perfetto per una rapida sessione di surf o una giornata sulla costa.'
 				},
 				{
 					label: '4-7 Giorni',
@@ -907,15 +894,23 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				{ title: 'Conferma e parti', desc: 'Confermiamo le tue date e i dettagli del ritiro direttamente su WhatsApp.' }
 			]
 		},
-		pricing: {
-			tag: 'Prezzi',
-			heading: 'Tariffe giornaliere semplici',
-			subtitle: 'Nessun costo nascosto.',
-			per_day: 'al giorno',
-			cards: [
-				{ name: 'City Cruiser', desc: 'Comodo e leggero — ideale per gli spostamenti tra spiaggia e città.' },
-				{ name: 'Long Range', desc: 'Batteria più grande per giornate lunghe tra gli spot di surf.' }
+		why_choose_us: {
+			tag: 'Perché sceglierci',
+			heading: 'Perché sceglierci',
+			intro: 'Un\'attività locale e piccola che rende semplice noleggiare uno scooter.',
+			items: [
+				{ title: 'Ritiro locale', desc: 'Ritiro a Tamraght, a pochi minuti da Taghazout.' },
+				{ title: 'Scooter ben tenuti', desc: 'Elettrici, comodi, pronti per costa e città.' },
+				{ title: 'Date flessibili', desc: 'Controlla la disponibilità in tempo reale e prenota le tue date.' },
+				{ title: 'Assistenza su WhatsApp', desc: 'Domande prima o durante il noleggio? Scrivici direttamente.' }
 			]
+		},
+		reviews: {
+			tag: 'Recensioni',
+			heading: 'Ti è piaciuto il giro?',
+			subtitle: 'Faccelo sapere — una recensione aiuta altri viaggiatori a trovarci, e conta molto per la nostra piccola attività.',
+			google: 'Recensiscici su Google',
+			tripadvisor: 'Recensiscici su TripAdvisor'
 		},
 		faq: {
 			tag: 'FAQ',
@@ -934,7 +929,8 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 					q: 'Come confermo una prenotazione?',
 					a: 'Tocca un pulsante "Prenota su WhatsApp" — si aprirà una chat WhatsApp con la tua richiesta già compilata, e confermiamo da lì.'
 				}
-			]
+			],
+			cta: 'Hai ancora domande? Scrivici su WhatsApp.'
 		},
 		instagram: {
 			tag: 'Instagram',
@@ -979,7 +975,7 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 			home: 'الرئيسية',
 			packages: 'الباقات',
 			how_it_works: 'كيف يعمل',
-			pricing: 'الأسعار',
+			reviews: 'التقييمات',
 			faq: 'الأسئلة الشائعة',
 			contact: 'اتصل بنا'
 		},
@@ -1005,26 +1001,16 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				'تأجير دراجات كهربائية سريع وسهل لرحلات السيرف والشاطئ والتنقل في المدينة. راسلنا عبر واتساب وسنؤكد تواريخك — تماماً كالحجز مع صديق.',
 			scroll: 'مرر للأسفل'
 		},
-		features: {
-			tag: 'لماذا تحجز معنا',
-			heading: 'تأجير سهل ومحلي بدون تعقيد',
-			items: [
-				{ title: 'استلام محلي', desc: 'الاستلام من تمراغت، على بعد دقائق من تغازوت.' },
-				{ title: 'دراجات جيدة الصيانة', desc: 'كهربائية ومريحة وجاهزة لرحلات الساحل والمدينة.' },
-				{ title: 'تواريخ مرنة', desc: 'تحقق من التوفر المباشر واحجز التواريخ التي تناسبك.' },
-				{ title: 'دعم عبر واتساب', desc: 'لديك أسئلة قبل أو أثناء الإيجار؟ راسلنا مباشرة.' }
-			]
-		},
 		packages: {
-			tag: 'الباقات',
+			tag: 'العروض',
 			heading: 'باقات التأجير',
 			subtitle: 'كلما طالت مدة الإيجار، انخفض السعر اليومي.',
 			popular: 'الأكثر طلباً',
 			tiers: [
 				{
-					label: '١-٣ أيام',
+					label: 'يوم واحد',
 					tag: 'رحلة قصيرة',
-					desc: 'مثالية لرحلة سيرف سريعة أو عطلة نهاية أسبوع طويلة على الساحل.'
+					desc: 'مثالية لجلسة سيرف سريعة أو يوم واحد لاستكشاف الساحل.'
 				},
 				{
 					label: '٤-٧ أيام',
@@ -1051,15 +1037,23 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 				{ title: 'أكّد وانطلق', desc: 'نؤكد تواريخك وتفاصيل الاستلام مباشرة عبر واتساب.' }
 			]
 		},
-		pricing: {
-			tag: 'الأسعار',
-			heading: 'أسعار يومية بسيطة',
-			subtitle: 'بدون رسوم خفية.',
-			per_day: 'لليوم',
-			cards: [
-				{ name: 'City Cruiser', desc: 'مريحة وخفيفة — مثالية للتنقل بين الشاطئ والمدينة.' },
-				{ name: 'Long Range', desc: 'بطارية أكبر لأيام أطول من التنقل بين نقاط السيرف.' }
+		why_choose_us: {
+			tag: 'لماذا نحن',
+			heading: 'لماذا تحجز معنا',
+			intro: 'عمل محلي صغير يجعل استئجار الدراجة أمراً بسيطاً.',
+			items: [
+				{ title: 'استلام محلي', desc: 'الاستلام من تمراغت، على بعد دقائق من تغازوت.' },
+				{ title: 'دراجات جيدة الصيانة', desc: 'كهربائية ومريحة وجاهزة لرحلات الساحل والمدينة.' },
+				{ title: 'تواريخ مرنة', desc: 'تحقق من التوفر المباشر واحجز التواريخ التي تناسبك.' },
+				{ title: 'دعم عبر واتساب', desc: 'لديك أسئلة قبل أو أثناء الإيجار؟ راسلنا مباشرة.' }
 			]
+		},
+		reviews: {
+			tag: 'التقييمات',
+			heading: 'هل أعجبتك رحلتك؟',
+			subtitle: 'أخبر الآخرين — تقييمك يساعد المسافرين الآخرين على إيجادنا، ويعني الكثير لعملنا الصغير.',
+			google: 'قيّمنا على جوجل',
+			tripadvisor: 'قيّمنا على TripAdvisor'
 		},
 		faq: {
 			tag: 'الأسئلة الشائعة',
@@ -1078,7 +1072,8 @@ export const TRANSLATIONS: Record<LangCode, Translation> = {
 					q: 'كيف أؤكد الحجز؟',
 					a: 'اضغط على أي زر "احجز عبر واتساب" — ستُفتح محادثة واتساب مع طلبك معبأً مسبقاً، ونقوم بالتأكيد من هناك.'
 				}
-			]
+			],
+			cta: 'هل لا تزال لديك أسئلة؟ راسلنا عبر واتساب.'
 		},
 		instagram: {
 			tag: 'انستغرام',
