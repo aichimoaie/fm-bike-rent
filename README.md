@@ -1,9 +1,12 @@
 # Filio's Bike
 
-Scooter rental reservation site for a small electric-scooter rental operator in
-Tamraght / Taghazout, Morocco. Public marketing page, live availability view, and a
-reservation form that hands off to WhatsApp for confirmation — matching how the
-owner already runs bookings over WhatsApp/Instagram DMs.
+Scooter rental site for a small electric-scooter rental operator in Tamraght /
+Taghazout, Morocco. Public marketing page and a live availability view; every
+booking action is a `wa.me` WhatsApp deep link — there is no standalone
+reservation form/page — matching how the owner already runs bookings over
+WhatsApp/Instagram DMs. Visual design (colors, fonts, header/burger nav,
+floating WhatsApp button) follows the reference site
+ebike-agadir-adventures.com.
 
 ## Stack
 
@@ -66,13 +69,24 @@ fleet or reservation volume grows.
 
 ## Key behaviors
 
+- **Booking is WhatsApp-only**: there is no `/reserve` form. Every "Book"
+  button across the site (`src/lib/whatsapp.ts` builds the link) opens a
+  `wa.me/<owner number>?text=...` deep link pre-filled with the scooter (and
+  dates, where known) — a floating WhatsApp button (`WhatsAppFloat.svelte`) is
+  present on every page too.
+- **Reservation recording on `/availability` only**: the homepage's scooter
+  cards and the floating/header/footer buttons open WhatsApp directly with no
+  server call — there's no date context to record there. The `/availability`
+  page's booking widget, where a visitor *does* pick dates, still calls
+  `POST /api/reservations` (unchanged backend, still `pending` by default)
+  before opening WhatsApp, so `/admin` keeps having real reservations to
+  confirm/cancel against. This was an implementation judgment call: recording
+  only where dates are actually known avoids fabricating placeholder
+  date ranges for homepage clicks, while keeping `/admin` non-empty.
 - **Double-booking prevention**: `POST /api/reservations` checks for an
   overlapping date range and inserts the reservation inside a single SQLite
   transaction (`src/lib/server/db.ts`), so two concurrent submissions can't
   both slip past the check.
-- **WhatsApp handoff**: on a successful reservation, the reserve page builds a
-  `wa.me/<owner number>?text=...` link summarizing the booking and opens it in
-  a new tab (with a fallback link on the page in case the popup is blocked).
 - **SEO**: every public route sets `<title>`/meta description/OG tags via
   `src/lib/components/SeoHead.svelte`, uses semantic `<h1>`/`<h2>` headings
   mentioning Tamraght/Taghazout, and `/robots.txt` + `/sitemap.xml` are served

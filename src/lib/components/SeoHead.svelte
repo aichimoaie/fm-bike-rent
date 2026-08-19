@@ -13,7 +13,8 @@
 	<meta property="og:title" content={title} />
 	<meta property="og:description" content={description} />
 	<meta property="og:url" content={path} />
-	<meta name="twitter:card" content="summary" />
+	<meta property="og:image" content="/images/og-image.jpg" />
+	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
 </svelte:head>

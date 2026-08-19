@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
 
-const PAGES = ['/', '/availability', '/reserve'];
+const PAGES = ['/', '/availability'];
 
 export const GET: RequestHandler = ({ url }) => {
 	const urls = PAGES.map(
