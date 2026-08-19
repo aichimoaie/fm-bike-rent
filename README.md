@@ -22,7 +22,7 @@ owner already runs bookings over WhatsApp/Instagram DMs.
 
 ```sh
 npm install
-cp .env.example .env   # fill in PUBLIC_OWNER_WHATSAPP_NUMBER when known
+cp .env.example .env   # fill in PUBLIC_OWNER_WHATSAPP_NUMBER and ADMIN_PASSWORD
 npm run dev
 ```
 
@@ -34,16 +34,16 @@ defaults to 3000, and `DATABASE_PATH`).
 
 ## What still needs to be filled in before going live
 
-1. **Owner's WhatsApp number** — set `PUBLIC_OWNER_WHATSAPP_NUMBER` in `.env`
-   (digits only, international format, no `+`; see `.env.example` and
-   `src/lib/config.ts`). Until set, the reservation flow uses a placeholder
-   number and WhatsApp links won't reach anyone real.
+1. **Owner's WhatsApp number** — set in `.env`. Currently set to
+   `40770141357` (from `PUBLIC_OWNER_WHATSAPP_NUMBER`, digits only,
+   international format, no `+`; see `.env.example` and `src/lib/config.ts`).
+   Double-check this is the correct, final number before going live.
 2. **Real scooter data & photos** — scooters are seeded in
    `src/lib/server/db.ts` (name, model, price, description) with an emoji
    placeholder instead of a photo on the landing page. Either edit the seed
    data and re-run against a fresh DB, or add rows directly via SQLite
-   (`sqlite3 data.sqlite3`) — there is no admin UI in v1, by design (see
-   Admin shortcut below).
+   (`sqlite3 data.sqlite3`) — there is no scooter-editing UI in v1, by design
+   (see Admin shortcut below).
 3. **Domain & hosting** — not configured. The app is a standard Node
    SvelteKit app (`adapter-node`), deployable as-is to Fly.io/a VPS/Render/etc.,
    or swap the adapter for Vercel/Netlify if preferred. No domain-specific
@@ -52,11 +52,17 @@ defaults to 3000, and `DATABASE_PATH`).
 
 ## Admin shortcut (v1)
 
-There is no admin UI. Manage scooters directly against the SQLite database
-(`sqlite3 data.sqlite3`) — insert/update/deactivate rows in the `scooters`
-table. Reservations can be inspected/cancelled the same way (`reservations`
-table). This is an intentional shortcut for a single-operator, handful-of-
-scooters business; revisit if the fleet or reservation volume grows.
+Reservations have a workflow: every booking starts as `pending`. The owner
+reviews and confirms (or cancels) it at **`/admin`**, protected by HTTP Basic
+Auth — username `admin`, password from the `ADMIN_PASSWORD` env var. The
+admin page returns 503 if `ADMIN_PASSWORD` isn't set, and 401 until you
+authenticate. Cancelling a reservation frees its dates back up (cancelled
+reservations don't block new bookings or show as busy on `/availability`).
+
+There is still no UI for editing scooters themselves — manage the `scooters`
+table directly via SQLite (`sqlite3 data.sqlite3`). This is an intentional
+shortcut for a single-operator, handful-of-scooters business; revisit if the
+fleet or reservation volume grows.
 
 ## Key behaviors
 

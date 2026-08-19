@@ -27,11 +27,18 @@ db.exec(`
 		customer_phone TEXT NOT NULL,
 		start_date TEXT NOT NULL, -- ISO date, inclusive
 		end_date TEXT NOT NULL,   -- ISO date, inclusive
-		created_at TEXT NOT NULL
+		created_at TEXT NOT NULL,
+		status TEXT NOT NULL DEFAULT 'pending' -- pending | confirmed | cancelled
 	);
 
 	CREATE INDEX IF NOT EXISTS idx_reservations_scooter ON reservations(scooter_id);
 `);
+
+// Migration for DBs created before the `status` column existed.
+const reservationColumns = db.prepare('PRAGMA table_info(reservations)').all() as { name: string }[];
+if (!reservationColumns.some((c) => c.name === 'status')) {
+	db.exec(`ALTER TABLE reservations ADD COLUMN status TEXT NOT NULL DEFAULT 'pending'`);
+}
 
 const scooterCount = db.prepare('SELECT COUNT(*) as n FROM scooters').get() as { n: number };
 
@@ -74,6 +81,8 @@ export interface Scooter {
 	active: number;
 }
 
+export type ReservationStatus = 'pending' | 'confirmed' | 'cancelled';
+
 export interface Reservation {
 	id: string;
 	scooter_id: string;
@@ -82,6 +91,7 @@ export interface Reservation {
 	start_date: string;
 	end_date: string;
 	created_at: string;
+	status: ReservationStatus;
 }
 
 export function listScooters(): Scooter[] {
@@ -105,13 +115,15 @@ export function listReservationsForScooter(scooterId: string): Reservation[] {
 /**
  * Two inclusive date ranges [aStart, aEnd] and [bStart, bEnd] overlap iff
  * aStart <= bEnd AND bStart <= aEnd. ISO date strings (YYYY-MM-DD) compare
- * correctly with plain string comparison.
+ * correctly with plain string comparison. Cancelled reservations don't
+ * block the slot.
  */
 export function hasOverlap(scooterId: string, startDate: string, endDate: string): boolean {
 	const row = db
 		.prepare(
 			`SELECT COUNT(*) as n FROM reservations
 			 WHERE scooter_id = ?
+			 AND status != 'cancelled'
 			 AND start_date <= ?
 			 AND end_date >= ?`
 		)
@@ -143,8 +155,8 @@ const createReservationTxn = db.transaction((input: {
 	const id = randomUUID();
 	const created_at = new Date().toISOString();
 	db.prepare(
-		`INSERT INTO reservations (id, scooter_id, customer_name, customer_phone, start_date, end_date, created_at)
-		 VALUES (?, ?, ?, ?, ?, ?, ?)`
+		`INSERT INTO reservations (id, scooter_id, customer_name, customer_phone, start_date, end_date, created_at, status)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`
 	).run(id, input.scooterId, input.customerName, input.customerPhone, input.startDate, input.endDate, created_at);
 	return {
 		id,
@@ -153,7 +165,8 @@ const createReservationTxn = db.transaction((input: {
 		customer_phone: input.customerPhone,
 		start_date: input.startDate,
 		end_date: input.endDate,
-		created_at
+		created_at,
+		status: 'pending'
 	};
 });
 
@@ -165,4 +178,8 @@ export function createReservation(input: {
 	endDate: string;
 }): Reservation {
 	return createReservationTxn(input);
+}
+
+export function setReservationStatus(id: string, status: ReservationStatus): void {
+	db.prepare('UPDATE reservations SET status = ? WHERE id = ?').run(status, id);
 }

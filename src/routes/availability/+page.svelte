@@ -22,7 +22,11 @@
 	function isBooked(scooterId: string, date: Date): boolean {
 		const iso = toISODate(date);
 		return data.reservations.some(
-			(r) => r.scooter_id === scooterId && r.start_date <= iso && r.end_date >= iso
+			(r) =>
+				r.scooter_id === scooterId &&
+				r.status !== 'cancelled' &&
+				r.start_date <= iso &&
+				r.end_date >= iso
 		);
 	}
 
