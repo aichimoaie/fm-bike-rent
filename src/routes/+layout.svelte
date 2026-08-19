@@ -10,6 +10,25 @@
 
 	let menuOpen = $state(false);
 
+	const languages = [
+		{ code: 'en', label: 'English', flag: '🇬🇧' },
+		{ code: 'fr', label: 'Français', flag: '🇫🇷' },
+		{ code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+		{ code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+		{ code: 'es', label: 'Español', flag: '🇪🇸' },
+		{ code: 'it', label: 'Italiano', flag: '🇮🇹' },
+		{ code: 'ar', label: 'العربية', flag: '🇲🇦' }
+	];
+	let currentLang = $state(languages[0]);
+	let langOpen = $state(false);
+	let langSwitcherEl: HTMLDivElement | undefined = $state();
+
+	function handleWindowClick(e: MouseEvent) {
+		if (langOpen && langSwitcherEl && !langSwitcherEl.contains(e.target as Node)) {
+			langOpen = false;
+		}
+	}
+
 	const navItems = [
 		{ href: '/#fleet', label: 'Fleet' },
 		{ href: '/#how-it-works', label: 'How it works' },
@@ -32,6 +51,8 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
+
+<svelte:window onclick={handleWindowClick} />
 
 <div class="flex min-h-screen flex-col">
 	<header
@@ -61,6 +82,32 @@
 				</a>
 			</div>
 
+			<div class="lang-switcher" class:open={langOpen} bind:this={langSwitcherEl}>
+				<button
+					class="lang-current"
+					aria-label="Change language"
+					onclick={() => (langOpen = !langOpen)}
+				>
+					<span class="lang-flag">{currentLang.flag}</span>
+					<span>{currentLang.code.toUpperCase()}</span>
+				</button>
+				<div class="lang-dropdown">
+					{#each languages as lang (lang.code)}
+						<button
+							class="lang-option"
+							class:active={lang.code === currentLang.code}
+							onclick={() => {
+								currentLang = lang;
+								langOpen = false;
+							}}
+						>
+							<span class="lang-flag">{lang.flag}</span>
+							<span>{lang.label}</span>
+						</button>
+					{/each}
+				</div>
+			</div>
+
 			<button
 				class="burger"
 				class:open={menuOpen}
@@ -73,32 +120,36 @@
 				<span></span>
 			</button>
 		</div>
-	</header>
 
-	<!-- Mobile off-canvas nav -->
-	<div
-		class="fixed inset-0 z-100 bg-black/30 transition-opacity {menuOpen
-			? 'opacity-100'
-			: 'pointer-events-none opacity-0'}"
-		onclick={closeMenu}
-		role="presentation"
-	></div>
-	<aside class="nav-mobile-panel flex flex-col justify-center gap-2 p-8" class:open={menuOpen}>
-		{#each navItems as item (item.href)}
-			<a href={item.href} class="nav-link" class:active={isActive(item.href)} onclick={closeMenu}>
-				{item.label}
-			</a>
-		{/each}
-		<a
-			href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
-			target="_blank"
-			rel="noopener"
-			class="btn btn-whatsapp mt-4"
+		<!-- Mobile off-canvas nav: nested inside <header> so the burger's higher
+		     z-index (105) is compared locally against the panel/backdrop (101/100)
+		     within the same stacking context, instead of a page-level sibling
+		     panel unconditionally covering the whole header. Matches the reference
+		     site's own header/nav-list structure. -->
+		<div
+			class="fixed inset-0 z-100 bg-black/30 transition-opacity {menuOpen
+				? 'opacity-100'
+				: 'pointer-events-none opacity-0'}"
 			onclick={closeMenu}
-		>
-			Book on WhatsApp
-		</a>
-	</aside>
+			role="presentation"
+		></div>
+		<aside class="nav-mobile-panel flex flex-col justify-center gap-2 p-8" class:open={menuOpen}>
+			{#each navItems as item (item.href)}
+				<a href={item.href} class="nav-link" class:active={isActive(item.href)} onclick={closeMenu}>
+					{item.label}
+				</a>
+			{/each}
+			<a
+				href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+				target="_blank"
+				rel="noopener"
+				class="btn btn-whatsapp mt-4"
+				onclick={closeMenu}
+			>
+				Book on WhatsApp
+			</a>
+		</aside>
+	</header>
 
 	<main class="flex-1 pt-20">
 		{@render children()}
