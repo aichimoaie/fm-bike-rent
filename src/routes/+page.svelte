@@ -242,15 +242,15 @@
 	</div>
 </section>
 
-<section class="section-fb">
+<section class="section-fb bg-white">
 	<div class="container-fb text-center">
 		<div class="mx-auto max-w-[750px]" use:reveal>
 			<p class="section-tag">Scenery</p>
 			<h2 class="mt-4 text-3xl">Where you'll ride</h2>
-			<div class="divider"></div>
 			<p class="mt-4 text-(--color-gray)">
 				Coast roads, argan trails and the Atlas foothills &mdash; all within reach from Tamraght.
 			</p>
+			<div class="divider"></div>
 		</div>
 		<div class="insta-grid" use:reveal>
 			{#each galleryImages as src (src)}
@@ -259,6 +259,14 @@
 				</div>
 			{/each}
 		</div>
+		<a
+			href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
+			target="_blank"
+			rel="noopener"
+			class="btn btn-primary mt-8"
+		>
+			Book on WhatsApp
+		</a>
 	</div>
 </section>
 

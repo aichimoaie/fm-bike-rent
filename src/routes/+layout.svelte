@@ -60,9 +60,8 @@
 		style="background: rgba(245, 238, 220, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow-fb-sm);"
 	>
 		<div class="container-fb flex h-full items-center justify-between gap-8">
-			<a href="/" class="flex shrink-0 items-center gap-3">
+			<a href="/" class="flex shrink-0 items-center gap-3" aria-label={BUSINESS_NAME}>
 				<img src="/images/logo.png" alt={BUSINESS_NAME} class="h-14 w-auto object-contain" />
-				<span class="font-heading text-xl text-(--color-green)">{BUSINESS_NAME}</span>
 			</a>
 
 			<nav class="nav-desktop items-center gap-1" aria-label="Main navigation">
@@ -70,18 +69,6 @@
 					<a href={item.href} class="nav-link" class:active={isActive(item.href)}>{item.label}</a>
 				{/each}
 			</nav>
-
-			<div class="nav-desktop">
-				<a
-					href={waLink(`Hi! I'd like to rent a scooter from ${BUSINESS_NAME}.`)}
-					target="_blank"
-					rel="noopener"
-					class="btn btn-whatsapp"
-				>
-					<span>💬</span>
-					<span>Book on WhatsApp</span>
-				</a>
-			</div>
 
 			<div class="lang-switcher" class:open={langOpen} bind:this={langSwitcherEl}>
 				<button
