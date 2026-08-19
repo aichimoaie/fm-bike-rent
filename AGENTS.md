@@ -15,6 +15,7 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 - i18n: 7 languages (EN/FR/NL/DE/ES/IT/AR) with real (not machine-approximate) translations, including WhatsApp message text; Arabic is RTL. Source: `src/lib/i18n/`.
 - `/admin` reads `ADMIN_PASSWORD` via `$env/dynamic/private` (fixed — previously used raw `process.env` at module load, which didn't reliably populate under `vite dev`; works correctly now under both `npm run dev` and `node build/index.js`).
 - Mobile RTL footer/nav alignment issues (bidi-reordered phone number/copyright line, hardcoded `text-align: left` on nav/lang-dropdown items) are fixed — see the RTL section below before touching header/footer/nav CSS again.
+- No production deployment exists yet — no domain, no hosting account, no CDN configured. A `Dockerfile` is ready and verified (`docker build` + `docker run` both tested locally). Suggested (not provisioned) stack: Hetzner Cloud VPS running the Docker image + Cloudflare free plan in front for CDN/caching of `static/images/` and free TLS. A temporary ngrok tunnel to a local dev instance was used for captain preview during this work — that tunnel is not persistent and is not a deployment.
 
 ## What this project is
 
