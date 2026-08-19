@@ -68,7 +68,8 @@
 				rel="noopener"
 				class="btn btn-whatsapp btn-lg"
 			>
-				Book on WhatsApp
+				<span>💬</span>
+				<span>Book on WhatsApp</span>
 			</a>
 			<a href="/availability" class="btn btn-secondary btn-lg">Check availability</a>
 		</div>
@@ -141,7 +142,8 @@
 							<span class="card-fb-price-unit">/ day</span>
 						</div>
 						<a href={scooterWaLink(scooter.name)} target="_blank" rel="noopener" class="btn btn-whatsapp">
-							Book on WhatsApp
+							<span>💬</span>
+							<span>Book on WhatsApp</span>
 						</a>
 					</div>
 				</div>
@@ -273,7 +275,8 @@
 			rel="noopener"
 			class="btn btn-whatsapp btn-lg mt-8"
 		>
-			Book on WhatsApp
+			<span>💬</span>
+			<span>Book on WhatsApp</span>
 		</a>
 	</div>
 </section>

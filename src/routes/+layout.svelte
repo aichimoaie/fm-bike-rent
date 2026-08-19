@@ -30,10 +30,10 @@
 	}
 
 	const navItems = [
+		{ href: '/', label: 'Home' },
 		{ href: '/#fleet', label: 'Fleet' },
 		{ href: '/#how-it-works', label: 'How it works' },
 		{ href: '/#pricing', label: 'Pricing' },
-		{ href: '/availability', label: 'Availability' },
 		{ href: '/#faq', label: 'FAQ' },
 		{ href: '/#contact', label: 'Contact' }
 	];
@@ -78,7 +78,8 @@
 					rel="noopener"
 					class="btn btn-whatsapp"
 				>
-					Book on WhatsApp
+					<span>💬</span>
+					<span>Book on WhatsApp</span>
 				</a>
 			</div>
 
@@ -146,7 +147,8 @@
 				class="btn btn-whatsapp mt-4"
 				onclick={closeMenu}
 			>
-				Book on WhatsApp
+				<span>💬</span>
+				<span>Book on WhatsApp</span>
 			</a>
 		</aside>
 	</header>
@@ -177,9 +179,9 @@
 			<div>
 				<h4 class="text-sm tracking-[3px] text-(--color-orange) uppercase">Navigation</h4>
 				<ul class="mt-5 space-y-2 text-sm text-white/80">
+					<li><a href="/" class="hover:text-(--color-orange)">Home</a></li>
 					<li><a href="/#fleet" class="hover:text-(--color-orange)">Fleet</a></li>
 					<li><a href="/#pricing" class="hover:text-(--color-orange)">Pricing</a></li>
-					<li><a href="/availability" class="hover:text-(--color-orange)">Availability</a></li>
 				</ul>
 			</div>
 			<div>

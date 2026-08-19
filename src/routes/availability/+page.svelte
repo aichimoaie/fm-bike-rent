@@ -194,7 +194,8 @@
 			{/if}
 
 			<button type="submit" disabled={submitting} class="btn btn-whatsapp w-full disabled:opacity-50">
-				{submitting ? 'Preparing…' : 'Book on WhatsApp'}
+				{#if !submitting}<span>💬</span>{/if}
+				<span>{submitting ? 'Preparing…' : 'Book on WhatsApp'}</span>
 			</button>
 		</form>
 	</div>
